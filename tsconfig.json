@@ -1,0 +1,14 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "strict": true,
+    "baseUrl": "./src"  ,
+    "target": "esnext", 
+    "lib": ["es2017"],   
+    "jsx": "react-native",
+    "module": "commonjs",
+    "moduleResolution": "node",       
+    "resolveJsonModule": true,   
+  }
+}
