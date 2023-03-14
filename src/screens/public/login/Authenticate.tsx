@@ -107,7 +107,7 @@ const Authenticate = memo(() => {
 
             <View style={styles.bottomLayout}>
               <Text onPress={goBack} category="body" center>
-                Olvidaste tu contraseña
+                Olvidé mi contraseña
               </Text>
 
               <Button
@@ -120,7 +120,7 @@ const Authenticate = memo(() => {
                   try {
                     await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
                     signIn(password, user);
-                    navigation.navigate("Home");
+                    navigation.navigate("Calendario");
                     console.log("User info saved successfully!");
                   } catch (error) {
                     console.log("Error saving user info: ", error);
@@ -140,13 +140,6 @@ const Authenticate = memo(() => {
           showsVerticalScrollIndicator={false}
           numColumns={2}
           renderItem={({ item, index }) => <CardSignIn item={item} onPress={handleCard} />}
-        />
-        <Button
-          children="Create An Account!"
-          status="transparent"
-          size="tiny"
-          onPress={goBack}
-          style={styles.btnBottom}
         />
       </Container>
     </TouchableWithoutFeedback>

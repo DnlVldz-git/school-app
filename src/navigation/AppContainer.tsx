@@ -15,6 +15,9 @@ import Finance07 from "screens/Finance/Finance07";
 import getIcon from "utils/constants";
 import Authenticate from "screens/public/login/Authenticate";
 import * as SecureStore from "expo-secure-store";
+import Finance08 from "screens/Finance/Finance08";
+import Finance00 from "screens/Finance/Finance00";
+import SignUp01 from "screens/public/signup/SignUp01";
 
 enableScreens();
 
@@ -127,11 +130,19 @@ const AppContainer = () => {
             {state.userToken === null ? (
               <>
                 <Tab.Screen name="Login" component={Authenticate} />
+                <Tab.Screen name="Registro" component={SignUp01} />
               </>
             ) : (
               <>
-                <Tab.Screen name="Home" component={Finance06} />
-                <Tab.Screen name="Settings" component={Finance07} />
+                <Tab.Screen
+                  name="Calendario"
+                  children={() => <Finance00 screen={"Videosesión"} />}
+                />
+                <Tab.Screen
+                  name="Mis clases"
+                  children={() => <Finance00 screen={"Material de clase"} />}
+                />
+                <Tab.Screen name="Mi Perfil" children={() => <Finance00 screen={"Planes"} />} />
               </>
             )}
           </Tab.Navigator>

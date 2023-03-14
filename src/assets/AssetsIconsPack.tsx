@@ -33,6 +33,7 @@ const AssetsIconsPack: IconPack<ImageProps | SvgProps> = {
   name: "assets",
   icons: {
     arrow_circle_left: createIcon(Icons.arrow_circle_left),
+    sign_up: createIcon(Icons.sign_up),
     arrow_circle_right: createIcon(Icons.arrow_circle_right),
     caret_left: createIcon(Icons.caret_left),
     caret_right: createIcon(Icons.caret_right),
