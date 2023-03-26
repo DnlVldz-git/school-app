@@ -5,6 +5,11 @@ const Images = {
   folderStar: require("./image_folder_star.png"),
   shieldTick: require("./image_shield_tick.png"),
   logo4: require("./logo_4.png"),
+  notifications: require("./campana.png"),
+  policy: require("./privacy-policy.png"),
+  questions: require("./question.png"),
+  subscriptions: require("./subscription.png"),
+  arrow: require("./right-arrow.png"),
   onboarding: {
     onboarding01: require('./onboarding/img_intro_1.png'),
     onboarding02: require('./onboarding/img_intro_2.png'),

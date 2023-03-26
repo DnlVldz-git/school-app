@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View } from "react-native";
+import { View, Image, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useLayout } from "hooks";
 import {
@@ -30,58 +30,75 @@ const Finance07 = React.memo(() => {
   return (
     <Container style={styles.container}>
       <TopNavigation
-        title={"Transfer money"}
+        title={"Mi perfil"}
         accessoryLeft={<NavigationAction status="primary" />}
         accessoryRight={<NavigationAction icon="circles_four" status="primary" />}
       />
       <Content contentContainerStyle={styles.contentContainerStyle}>
-        <Avatar
-          source={Images.avatar.avatar10}
-          //@ts-ignore
-          style={styles.avatar}
-        />
-        <Text category="h6" marginTop={16} center>
-          Francis Dixon
-        </Text>
-        <Text category="footnote" status="snow" marginTop={4} center>
-          francisdixon@company.com
-        </Text>
-        <View style={styles.boxView}>
-          <Layout style={styles.box} level="5">
-            <Text category="callout" marginTop={16} center status="white">
-              Total Balance
-            </Text>
-            <Text category="h4" center children={"$1,485.60"} status="white" marginTop={4} />
-            <Text
-              category="subhead"
-              center
-              children={"fee 1.5%"}
-              status="white"
-              marginTop={4}
-              opacity={0.5}
-            />
-          </Layout>
-          <Layout style={styles.iconView} level="8">
-            <Icon pack="assets" name="line_up" style={styles.icon} />
-          </Layout>
-        </View>
         <Layout level="2" style={styles.card}>
-          <View style={styles.row}>
-            <Text category="h7">Transfer card</Text>
-            <Text category="h7" uppercase>
-              Visa
-            </Text>
-          </View>
-          <View style={styles.cardNumber}>
-            <Asterisk number={4} />
-            <Asterisk number={4} />
-            <Asterisk number={4} />
-            <Text category="h4">1313</Text>
+          <Avatar
+            source={Images.avatar.avatar10}
+            //@ts-ignore
+            style={styles.avatar}
+          />
+          <Text category="h6" marginTop={16} center>
+            Karen Mau
+          </Text>
+          <Text category="footnote" status="snow" marginTop={4} center>
+            karen@gmail.com
+          </Text>
+          <View style={styles.boxView}>
+            <Layout style={styles.box} level="5">
+              <Text category="callout" marginTop={2} center status="white">
+                Editar
+              </Text>
+            </Layout>
           </View>
         </Layout>
-        <Layout level="2" style={styles.note}>
-          <Text category="body">GLWS Bro</Text>
-        </Layout>
+        <TouchableOpacity style={styles.note}>
+        <Text><Image source={Images.notifications}
+                /* @ts-ignore */
+                style={styles.image}
+              />
+          <Text category="body">Notificaciones</Text></Text>
+          <Image source={Images.arrow}
+                /* @ts-ignore */
+                style={styles.arrow}
+              />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.note}>
+        <Text><Image source={Images.subscriptions}
+                /* @ts-ignore */
+                style={styles.image}
+              />
+          <Text category="body">Suscripción</Text></Text>
+          <Image source={Images.arrow}
+                /* @ts-ignore */
+                style={styles.arrow}
+              />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.note}>
+        <Text><Image source={Images.policy}
+                /* @ts-ignore */
+                style={styles.image}
+              />
+          <Text category="body">Política de privacidad</Text></Text>
+          <Image source={Images.arrow}
+                /* @ts-ignore */
+                style={styles.arrow}
+              />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.note}>
+          <Text><Image source={Images.questions}
+                /* @ts-ignore */
+                style={styles.image}
+              />
+          <Text category="body">FAQs</Text></Text>
+          <Image source={Images.arrow}
+                /* @ts-ignore */
+                style={styles.arrow}
+              />
+        </TouchableOpacity>
       </Content>
       <Layout style={[styles.bottom, { paddingBottom: bottom + 16 }]}>
         <Button
@@ -118,11 +135,14 @@ const themedStyles = StyleService.create({
     borderRadius: 32,
   },
   boxView: {
-    marginTop: 54,
+    marginTop: 30,
+    width: 150,
+    justifyContent: "center",
+    alignSelf: "center",
   },
   box: {
     borderRadius: 12,
-    padding: 16,
+    padding: 12,
   },
   iconView: {
     width: 48,
@@ -136,15 +156,20 @@ const themedStyles = StyleService.create({
     top: -36,
     borderColor: "background-basic-color-1",
   },
+  image: {
+    width: 22,
+    height: 22,
+    marginHorizontal: '1%',
+  },
   icon: {
     width: 16,
     height: 16,
     tintColor: "color-basic-100",
   },
   card: {
-    height: 100,
+    height: 210,
     borderRadius: 12,
-    marginTop: 24,
+    marginTop: 15,
     paddingTop: 14,
     paddingBottom: 12,
     paddingHorizontal: 16,
@@ -155,16 +180,20 @@ const themedStyles = StyleService.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  cardNumber: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 4,
+  arrow: {
+    width: 10,
+    height: 10,
+    marginTop: 8,
   },
   note: {
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 24,
+    marginBottom: 20,
+    marginleft: 10,
+    flexDirection: "row",
+    backgroundColor: "#E8EDF7",
+    justifyContent: "space-between",
   },
   bottom: {
     position: "absolute",

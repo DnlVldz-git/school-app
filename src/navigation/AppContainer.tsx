@@ -142,7 +142,8 @@ const AppContainer = () => {
                   name="Mis clases"
                   children={() => <Finance00 screen={"Material de clase"} />}
                 />
-                <Tab.Screen name="Mi Perfil" children={() => <Finance00 screen={"Planes"} />} />
+                <Tab.Screen name="Mi Perfil" 
+                  children={() => <Finance07 screen={"Perfil"} />} />
               </>
             )}
           </Tab.Navigator>

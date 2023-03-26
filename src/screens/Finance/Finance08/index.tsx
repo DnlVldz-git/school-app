@@ -35,7 +35,7 @@ const Finance08 = React.memo(() => {
       />
       <Content>
         <Text category="h4" marginLeft={24} marginBottom={24}>
-          Fequecy
+          Clases
         </Text>
         <Content horizontal contentContainerStyle={styles.contentWallet}>
           {dataWallet.map((wallet, i) => {
@@ -84,7 +84,6 @@ const Finance08 = React.memo(() => {
       />
       <Layout style={[styles.bottom, {paddingBottom: bottom + 8}]} level="8">
         <NavigationAction icon="house" status="primary" />
-        <Image source={Images.logo} style={styles.logo} />
         <NavigationAction icon="user" status="primary" />
       </Layout>
     </Container>
