@@ -10,6 +10,7 @@ const Images = {
   questions: require("./question.png"),
   subscriptions: require("./subscription.png"),
   arrow: require("./right-arrow.png"),
+  videoCall:require("./video-call.png"),
   onboarding: {
     onboarding01: require("./onboarding/img_intro_1.png"),
     onboarding02: require("./onboarding/img_intro_2.png"),

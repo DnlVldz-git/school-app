@@ -3,9 +3,9 @@ import { NavigationContainer } from "@react-navigation/native";
 
 import { useAppSelector } from "hooks/useRedux";
 
-import PublicTabs from "routes/PublicTabs";
 import VerifiedTabs from "routes/VerifiedTabs";
 import NoVerifiedTabs from "routes/NoVerifiedTabs";
+import PublicTabs from "routes/PublicTabs";
 
 export const AuthContext = React.createContext<any | null>({});
 

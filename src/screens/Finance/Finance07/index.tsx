@@ -14,7 +14,7 @@ import {
 } from "@ui-kitten/components";
 import Images from "assets/images";
 import { Container, Content, Text, NavigationAction } from "components";
-import { logout } from "reducers/AuthReducer";
+import { logout } from "services/AuthService";
 
 const Perfil = React.memo(() => {
   const { bottom } = useLayout();
@@ -40,7 +40,7 @@ const Perfil = React.memo(() => {
             style={styles.avatar}
           />
           <Text category="h6" marginTop={16} center>
-            {`${currentUser.person.firstName} ${currentUser.person.lastName}`}
+            {`${currentUser.firstName} ${currentUser.lastName}`}
           </Text>
           <Text category="footnote" status="snow" marginTop={4} center>
             {currentUser.email}
