@@ -19,55 +19,49 @@ import {
   VStack,
 } from 'components';
 import Images from 'assets/images';
-import Wallet from './Wallet';
 import {Image} from 'react-native';
+import { navigate } from "navigation/RootNavigation";
+import { useNavigation } from "@react-navigation/native";
 
 const Finance08 = React.memo(() => {
+  const navigation = useNavigation<any>();
+  const { goBack } = useNavigation();
   const styles = useStyleSheet(themedStyles);
   const {bottom} = useLayout();
-  const [activeWallet, setActiveWallet] = React.useState(0);
   return (
     <Container style={styles.container}>
       <TopNavigation
         style={styles.header}
+        accessoryLeft={<NavigationAction status="primary" />}
         accessoryRight={<Avatar source={Images.avatar.avatar08} />}
-        accessoryLeft={<NavigationAction icon="browsers" status="primary" />}
       />
       <Content>
         <Text category="h4" marginLeft={24} marginBottom={24}>
-          Clases
+          Mis clases
         </Text>
-        <Content horizontal contentContainerStyle={styles.contentWallet}>
-          {dataWallet.map((wallet, i) => {
-            return (
-              <Wallet
-                item={wallet}
-                isActive={activeWallet === i}
-                onPress={() => {
-                  setActiveWallet(i);
-                }}
-                key={i}
-              />
-            );
-          })}
-        </Content>
-        <HStack itemsCenter mh={24} mt={32}>
-          <Text category="h4">Latest Transaction</Text>
-          <Icon pack="assets" name="caret_right" style={styles.caret} />
-        </HStack>
-        {DATA_TRANSACTION.map((item, i) => {
+        {DATA_CLASS.map((item, i) => {
           return (
             <VStack key={i} mt={24} mh={24}>
               <HStack>
                 <Layout style={styles.stag} level="3">
-                  <Icon pack="assets" name={item.icon} style={styles.icon} />
+                <Image source={Images.videoCall}
+                /* @ts-ignore */
+                style={styles.icon}
+              />
                 </Layout>
+                
+                
                 <VStack style={{flex: 1}}>
                   <HStack mb={10}>
                     <Text category="s2">{item.title}</Text>
-                    <Text category="h7" status="danger">
-                      {item.amount}
+                    <Text category="callout" status="danger" onPress={() =>{
+                     navigation.navigate("Detalles");
+                    }
+                      
+                    }>
+                      Ver detalles
                     </Text>
+                    
                   </HStack>
                   <Text category="c1" status="platinum">
                     {item.date}
@@ -82,10 +76,6 @@ const Finance08 = React.memo(() => {
         accessoryLeft={<Icon pack="assets" name="plus" />}
         style={styles.plus}
       />
-      <Layout style={[styles.bottom, {paddingBottom: bottom + 8}]} level="8">
-        <NavigationAction icon="house" status="primary" />
-        <NavigationAction icon="user" status="primary" />
-      </Layout>
     </Container>
   );
 });
@@ -117,13 +107,13 @@ const themedStyles = StyleService.create({
     marginRight: 12,
   },
   icon: {
-    width: 24,
-    height: 24,
+    width: 32,
+    height: 32,
   },
   plus: {
     position: 'absolute',
     right: 24,
-    bottom: 60,
+    bottom: 20,
     width: 48,
     zIndex: 100,
   },
@@ -139,57 +129,26 @@ const themedStyles = StyleService.create({
     height: 24,
   },
 });
-const dataWallet = [
+
+const DATA_CLASS = [
   {
-    id: '0',
-    name: 'Living',
-    icon: 'life',
-    color: '#215191',
-    total_transactions: 795.2,
-    amount: 5680,
+    id: 1,
+    title: 'Clase 1',
+    date: '27/03/2023 10:30',
   },
   {
-    id: '1',
-    name: 'Entertainment',
-    icon: 'entertainment',
-    color: '#4B9BAE',
-    total_transactions: 177.6,
-    amount: 1480,
+    id: 2,
+    title: 'Clase 2',
+    date: '30/03/2023 13:00',
   },
   {
-    id: '2',
-    name: 'Shopping',
-    icon: 'shopping',
-    color: '#949398',
-    total_transactions: 511.2,
-    amount: 5680,
+    id: 3,
+    title: 'Clase 3',
+    date: '31/03/2023 20:00',
   },
   {
-    id: '6',
-    name: 'Education',
-    icon: 'education',
-    color: '#FE9870',
-    total_transactions: 170.4,
-    amount: 5680,
-  },
-];
-const DATA_TRANSACTION = [
-  {
-    title: 'Food & Drink',
-    icon: 'shopping',
-    date: '01/25/2021 06:37',
-    amount: '-56.000đ',
-  },
-  {
-    title: 'Entertainment',
-    icon: 'education',
-    date: '01/25/2021 06:37',
-    amount: '-56.000đ',
-  },
-  {
-    title: 'Shopping',
-    icon: 'life',
-    date: '01/25/2021 06:37',
-    amount: '-56.000đ',
+    id: 4,
+    title: 'Clase 4',
+    date: '01/04/2023 21:30',
   },
 ];

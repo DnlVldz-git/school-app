@@ -60,7 +60,7 @@ const Finance07 = React.memo(() => {
                 /* @ts-ignore */
                 style={styles.image}
               />
-          <Text category="body">Notificaciones</Text></Text>
+          <Text category="body"> Notificaciones</Text></Text>
           <Image source={Images.arrow}
                 /* @ts-ignore */
                 style={styles.arrow}
@@ -71,7 +71,7 @@ const Finance07 = React.memo(() => {
                 /* @ts-ignore */
                 style={styles.image}
               />
-          <Text category="body">Suscripción</Text></Text>
+          <Text category="body"> Suscripción</Text></Text>
           <Image source={Images.arrow}
                 /* @ts-ignore */
                 style={styles.arrow}
@@ -82,7 +82,7 @@ const Finance07 = React.memo(() => {
                 /* @ts-ignore */
                 style={styles.image}
               />
-          <Text category="body">Política de privacidad</Text></Text>
+          <Text category="body"> Política de privacidad</Text></Text>
           <Image source={Images.arrow}
                 /* @ts-ignore */
                 style={styles.arrow}
@@ -93,7 +93,7 @@ const Finance07 = React.memo(() => {
                 /* @ts-ignore */
                 style={styles.image}
               />
-          <Text category="body">FAQs</Text></Text>
+          <Text category="body"> FAQs</Text></Text>
           <Image source={Images.arrow}
                 /* @ts-ignore */
                 style={styles.arrow}

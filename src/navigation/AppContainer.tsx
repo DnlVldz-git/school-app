@@ -11,6 +11,7 @@ import { AsyncStorage } from "react-native";
 import { navigationRef } from "./RootNavigation";
 import Finance06 from "screens/Finance/Finance06";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Finance05 from "screens/Finance/Finance05";
 import Finance07 from "screens/Finance/Finance07";
 import getIcon from "utils/constants";
 import Authenticate from "screens/public/login/Authenticate";
@@ -20,7 +21,6 @@ import Finance00 from "screens/Finance/Finance00";
 import SignUp01 from "screens/public/signup/SignUp01";
 
 enableScreens();
-
 const Tab = createBottomTabNavigator();
 
 export const AuthContext = React.createContext<any | null>({});
@@ -140,13 +140,15 @@ const AppContainer = () => {
                 />
                 <Tab.Screen
                   name="Mis clases"
-                  children={() => <Finance00 screen={"Material de clase"} />}
+                  children={() => <Finance08 screen={"Lista de clases"} />}
                 />
                 <Tab.Screen name="Mi Perfil" 
                   children={() => <Finance07 screen={"Perfil"} />} />
               </>
             )}
+
           </Tab.Navigator>
+          
         </AuthContext.Provider>
       </View>
     </NavigationContainer>

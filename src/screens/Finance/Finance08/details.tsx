@@ -1,4 +1,4 @@
-import * as React from 'react';
+/*import * as React from 'react';
 import {TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {
@@ -32,7 +32,7 @@ const Finance05 = React.memo(() => {
     <Container style={styles.container}>
       <TopNavigation
         accessoryLeft={<NavigationAction status="primary" />}
-        title="Detalles de la clase"
+        title="Add Transaction"
         accessoryRight={
           <NavigationAction icon="circles_four" status="primary" />
         }
@@ -147,3 +147,4 @@ const DATA = [
     value: '$3,485.60',
   },
 ];
+*/
