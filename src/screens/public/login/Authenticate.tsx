@@ -1,16 +1,17 @@
-import React, { memo } from "react";
+import React, { memo, useCallback, useState } from "react";
+
 import {
   View,
   Image,
   TouchableOpacity,
-  ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
   FlatList,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+
 import {
   TopNavigation,
-  useTheme,
   StyleService,
   useStyleSheet,
   Icon,
@@ -18,31 +19,29 @@ import {
   Input,
   Button,
 } from "@ui-kitten/components";
-
 import Text from "components/Text";
 import Container from "components/Container";
 import CardSignIn from "../../../components/CardSignIn";
-import useLayout from "hooks/useLayout";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
 import Images from "assets/images";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthContext } from "navigation/AppContainer";
-import { useNavigation } from "@react-navigation/native";
+
+import useLayout from "hooks/useLayout";
+import { useAppDispatch } from "hooks/useRedux";
+
+import { login } from "services/AuthService";
 
 const Authenticate = memo(() => {
-  const navigation = useNavigation<any>();
-  const { navigate, goBack } = useNavigation();
-  const { top, bottom, width, height } = useLayout();
-  const theme = useTheme();
+  const { goBack } = useNavigation();
+  const { top } = useLayout();
+  const [hide, setHide] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const styles = useStyleSheet(themedStyles);
-  const [hide, setHide] = React.useState(false);
-  const handleCard = React.useCallback(() => {}, []);
-  const [user, setUser] = React.useState("");
-  const [password, setPassword] = React.useState("");
 
-  const { signIn } = React.useContext(AuthContext);
+  const dispatch = useAppDispatch();
+  const handleCard = useCallback(() => {}, []);
 
-  const accessoryRight = React.useCallback(() => {
+  const accessoryRight = useCallback(() => {
     return (
       <View style={{ flexDirection: "row" }}>
         <TouchableOpacity>
@@ -84,13 +83,13 @@ const Authenticate = memo(() => {
             <Input
               status="basic"
               placeholder="Correo"
-              value={user}
-              onChangeText={setUser}
+              value={email}
+              onChangeText={setEmail}
               style={{ marginBottom: 16 }}
             />
             <Input
-              secureTextEntry={hide}
               value={password}
+              secureTextEntry={hide}
               onChangeText={setPassword}
               status="basic"
               placeholder="Contraseña"
@@ -100,7 +99,11 @@ const Authenticate = memo(() => {
                     setHide(!hide);
                   }}
                 >
-                  <Icon {...props} pack="assets" name={hide ? "eye" : "eye_close"} />
+                  <Icon
+                    {...props}
+                    pack="assets"
+                    name={hide ? "eye" : "eye_close"}
+                  />
                 </TouchableOpacity>
               )}
             />
@@ -112,19 +115,12 @@ const Authenticate = memo(() => {
 
               <Button
                 onPress={async () => {
-                  // handle sign in logic here
-                  const userInfo = {
-                    user: user,
-                    password: password,
-                  };
-                  try {
-                    await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
-                    signIn(password, user);
-                    navigation.navigate("Calendario");
-                    console.log("User info saved successfully!");
-                  } catch (error) {
-                    console.log("Error saving user info: ", error);
-                  }
+                  dispatch(
+                    login({
+                      email: email,
+                      password: password,
+                    })
+                  );
                 }}
                 style={styles.button}
                 size="large"
@@ -139,7 +135,9 @@ const Authenticate = memo(() => {
           contentContainerStyle={styles.flatList}
           showsVerticalScrollIndicator={false}
           numColumns={2}
-          renderItem={({ item, index }) => <CardSignIn item={item} onPress={handleCard} />}
+          renderItem={({ item, index }) => (
+            <CardSignIn item={item} onPress={handleCard} />
+          )}
         />
       </Container>
     </TouchableWithoutFeedback>

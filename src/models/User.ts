@@ -2,36 +2,37 @@ import Person from "./Person";
 import Role from "./Role";
 
 interface UserProperties {
-  id?: number;
+  id?: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  address?: string;
+  dateOfBirth?: string;
   email?: string;
-  password?: string;
   verified?: boolean;
-  code?: string;
   role?: Role;
-  person?: Person;
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 
 export default class User {
   id;
+  firstName;
+  lastName;
+  phone;
+  address;
+  dateOfBirth;
   email;
-  password = "";
   verified = false;
-  code;
   role;
-  person;
-  createdAt;
-  updatedAt;
 
   constructor(properties: UserProperties = {}) {
-    this.id = properties.id || -1;
+    this.id = properties.id || "";
+    this.firstName = properties.firstName || "Accelerate";
+    this.lastName = properties.lastName || "Ed";
+    this.phone = properties.phone || "7229807997";
+    this.address = properties.address || "No address";
+    this.dateOfBirth = properties.dateOfBirth || new Date().toISOString();
     this.email = properties.email || "";
     this.role = properties.role || new Role();
-    this.person = properties.person || new Person();
     this.verified = properties.verified || false;
-    this.code = properties.code || "";
-    this.createdAt = properties.createdAt || new Date();
-    this.updatedAt = properties.updatedAt || new Date();
   }
 }

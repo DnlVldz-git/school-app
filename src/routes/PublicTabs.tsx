@@ -18,7 +18,7 @@ const PublicTabs = () => {
       style={{ backgroundColor: themes["background-basic-color-1"], flex: 1 }}
     >
       <Tab.Navigator
-        initialRouteName={"Finance01"}
+        initialRouteName={"Login"}
         screenOptions={({ route }) => ({
           headerShown: false,
           tabBarIcon: ({ focused, color, size }) => {

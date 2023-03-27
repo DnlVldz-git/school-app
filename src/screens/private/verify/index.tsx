@@ -1,14 +1,11 @@
 import * as React from "react";
+
 import { useLayout } from "hooks";
 
 import { StyleService, useStyleSheet } from "@ui-kitten/components";
 import { Container, Text, NavigationAction, HStack } from "components";
 
-interface Props {
-  screen: string;
-}
-
-const Finance00: React.FC<Props> = ({ screen }) => {
+const Verify = () => {
   const { top } = useLayout();
   const styles = useStyleSheet(themedStyles);
 
@@ -17,7 +14,7 @@ const Finance00: React.FC<Props> = ({ screen }) => {
       <HStack level="5" style={[{ paddingTop: top + 8 }]} itemsCenter>
         <NavigationAction icon="dot_six" status="basic" />
         <Text category="h7" status="white">
-          {screen}
+          Verifica tu cuenta
         </Text>
         <NavigationAction icon="circles_three" status="basic" />
       </HStack>
@@ -25,7 +22,7 @@ const Finance00: React.FC<Props> = ({ screen }) => {
   );
 };
 
-export default React.memo(Finance00);
+export default Verify;
 
 const themedStyles = StyleService.create({
   container: {

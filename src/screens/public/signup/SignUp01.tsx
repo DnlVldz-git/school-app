@@ -16,16 +16,14 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Text from "components/Text";
 import Container from "components/Container";
 import NavigationAction from "components/NavigationAction";
-import TabBar from "components/TabBar";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Images from "assets/images";
 
 const SignUp01 = memo(() => {
   const { goBack } = useNavigation();
-  const { top, bottom } = useSafeAreaInsets();
-  const theme = useTheme();
+  const { bottom } = useSafeAreaInsets();
   const styles = useStyleSheet(themedStyles);
-  const [activeTab, setActiveTab] = React.useState(0);
+
   return (
     <Container style={[styles.container, { paddingBottom: bottom + 8 }]}>
       <TopNavigation
@@ -58,37 +56,49 @@ const SignUp01 = memo(() => {
           style={styles.input}
           status="primary"
           placeholder="Nombre(s)"
-          accessoryLeft={(props) => <Icon {...props} pack="assets" name={"user"} />}
+          accessoryLeft={(props) => (
+            <Icon {...props} pack="assets" name={"user"} />
+          )}
         />
         <Input
           style={styles.input}
           status="primary"
           placeholder="Apellidos"
-          accessoryLeft={(props) => <Icon {...props} pack="assets" name={"user"} />}
+          accessoryLeft={(props) => (
+            <Icon {...props} pack="assets" name={"user"} />
+          )}
         />
         <Input
           style={styles.input}
           status="primary"
           placeholder="Teléfono"
-          accessoryLeft={(props) => <Icon {...props} pack="assets" name={"phone"} />}
+          accessoryLeft={(props) => (
+            <Icon {...props} pack="assets" name={"phone"} />
+          )}
         />
         <Input
           style={styles.input}
           status="primary"
           placeholder="Dirección"
-          accessoryLeft={(props) => <Icon {...props} pack="assets" name={"house"} />}
+          accessoryLeft={(props) => (
+            <Icon {...props} pack="assets" name={"house"} />
+          )}
         />
         <Input
           style={styles.input}
           status="primary"
           placeholder="Correo"
-          accessoryLeft={(props) => <Icon {...props} pack="assets" name={"email"} />}
+          accessoryLeft={(props) => (
+            <Icon {...props} pack="assets" name={"email"} />
+          )}
         />
         <Input
           style={styles.input}
           status="primary"
           placeholder="Contraseña"
-          accessoryLeft={(props) => <Icon {...props} pack="assets" name={"lock"} />}
+          accessoryLeft={(props) => (
+            <Icon {...props} pack="assets" name={"lock"} />
+          )}
         />
         <Button children="Registrarse" style={styles.signIn} />
       </KeyboardAwareScrollView>

@@ -14,11 +14,11 @@ import {
 } from "@ui-kitten/components";
 import Images from "assets/images";
 import { Container, Content, Text, NavigationAction } from "components";
-import { logout } from "reducers/AuthReducer";
+
+import { navigate } from "navigation/RootNavigation";
+import { logout } from "services/AuthService";
 
 const Perfil = React.memo(() => {
-  const { bottom } = useLayout();
-
   const styles = useStyleSheet(themedStyles);
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector((state) => state.auth.user);
@@ -33,35 +33,56 @@ const Perfil = React.memo(() => {
         }
       />
       <Content contentContainerStyle={styles.contentContainerStyle}>
-        <Layout level="2" style={styles.card}>
+        <Layout level="3" style={styles.card}>
           <Avatar
             source={Images.avatar.avatar10}
             //@ts-ignore
             style={styles.avatar}
           />
           <Text category="h6" marginTop={16} center>
-            {`${currentUser.person.firstName} ${currentUser.person.lastName}`}
+            {`${currentUser.firstName} ${currentUser.lastName}`}
           </Text>
           <Text category="footnote" status="snow" marginTop={4} center>
             {currentUser.email}
           </Text>
           <View style={styles.boxView}>
-            <Layout style={styles.box} level="5">
-              <Text category="callout" marginTop={2} center status="white">
+            <Layout style={styles.box} level="11">
+              <Image
+                source={Images.auth.edit}
+                /* @ts-ignore */
+                style={styles.image}
+              />
+              <Text category="callout" center status="white">
                 Editar
+              </Text>
+            </Layout>
+            <Layout style={styles.box} level="12">
+              <Image
+                source={Images.auth.logout}
+                /* @ts-ignore */
+                style={styles.image}
+              />
+              <Text
+                category="callout"
+                center
+                status="white"
+                onPress={() => {
+                  dispatch(logout());
+                  navigate("Login");
+                }}
+              >
+                Salir
               </Text>
             </Layout>
           </View>
         </Layout>
         <TouchableOpacity style={styles.note}>
-          <Text>
-            <Image
-              source={Images.notifications}
-              /* @ts-ignore */
-              style={styles.image}
-            />
-            <Text category="body">Notificaciones</Text>
-          </Text>
+          <Image
+            source={Images.subscriptions}
+            /* @ts-ignore */
+            style={styles.image}
+          />
+          <Text category="body"> Suscripción</Text>
           <Image
             source={Images.arrow}
             /* @ts-ignore */
@@ -69,14 +90,12 @@ const Perfil = React.memo(() => {
           />
         </TouchableOpacity>
         <TouchableOpacity style={styles.note}>
-          <Text>
-            <Image
-              source={Images.subscriptions}
-              /* @ts-ignore */
-              style={styles.image}
-            />
-            <Text category="body">Suscripción</Text>
-          </Text>
+          <Image
+            source={Images.policy}
+            /* @ts-ignore */
+            style={styles.image}
+          />
+          <Text category="body"> Política de privacidad</Text>
           <Image
             source={Images.arrow}
             /* @ts-ignore */
@@ -84,29 +103,12 @@ const Perfil = React.memo(() => {
           />
         </TouchableOpacity>
         <TouchableOpacity style={styles.note}>
-          <Text>
-            <Image
-              source={Images.policy}
-              /* @ts-ignore */
-              style={styles.image}
-            />
-            <Text category="body">Política de privacidad</Text>
-          </Text>
           <Image
-            source={Images.arrow}
+            source={Images.questions}
             /* @ts-ignore */
-            style={styles.arrow}
+            style={styles.image}
           />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.note}>
-          <Text>
-            <Image
-              source={Images.questions}
-              /* @ts-ignore */
-              style={styles.image}
-            />
-            <Text category="body">FAQs</Text>
-          </Text>
+          <Text category="body"> FAQs</Text>
           <Image
             source={Images.arrow}
             /* @ts-ignore */
@@ -114,15 +116,6 @@ const Perfil = React.memo(() => {
           />
         </TouchableOpacity>
       </Content>
-      <Layout style={[styles.bottom, { paddingBottom: bottom + 16 }]}>
-        <Button
-          activeOpacity={0.7}
-          children="Cerrar sesión"
-          onPress={() => {
-            dispatch(logout());
-          }}
-        />
-      </Layout>
     </Container>
   );
 });
@@ -142,14 +135,21 @@ const themedStyles = StyleService.create({
     borderRadius: 32,
   },
   boxView: {
-    marginTop: 30,
-    width: 150,
-    justifyContent: "center",
+    marginTop: 15,
+    width: "80%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
     alignSelf: "center",
   },
   box: {
     borderRadius: 12,
     padding: 12,
+    marginTop: 2,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignSelf: "center",
   },
   iconView: {
     width: 48,
@@ -197,7 +197,6 @@ const themedStyles = StyleService.create({
     paddingHorizontal: 16,
     borderRadius: 24,
     marginBottom: 20,
-    marginleft: 10,
     flexDirection: "row",
     backgroundColor: "#E8EDF7",
     justifyContent: "space-between",

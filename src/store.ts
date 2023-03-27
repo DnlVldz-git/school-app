@@ -6,6 +6,11 @@ export const store = configureStore({
     // Reducers for auth and actions
     auth: AuthReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      immutableCheck: false,
+      serializableCheck: false,
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
