@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {
   StyleService,
@@ -8,6 +8,7 @@ import {
   TopNavigation,
   Icon,
   Button,
+  Layout
 } from '@ui-kitten/components';
 
 import {
@@ -18,7 +19,7 @@ import {
   VStack,
   HStack,
 } from 'components';
-
+import Images from 'assets/images';
 import InputSelect from './InputSelect';
 
 const Finance05 = React.memo(() => {
@@ -38,52 +39,38 @@ const Finance05 = React.memo(() => {
         }
       />
       <Content contentContainerStyle={styles.content}>
-        <VStack level="5" padding={16} border={16}>
+        <VStack level="1" padding={16} border={16}>
+        <Text category="h4" marginLeft={-10} marginTop={5} marginBottom={16}>
+          Clase 1
+        </Text>
           <HStack justify="flex-start" mb={16}>
             {DATA.map((data, index) => {
               return (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => {
-                    setActiveIndex(index);
-                  }}>
-                  <Text
-                    status="white"
-                    category="callout"
-                    opacity={index === activeIndex ? 1 : 0.5}
-                    marginRight={8}>
-                    {data.title}
-                  </Text>
-                </TouchableOpacity>
+                  <Layout style={styles.boxView} level="5">
+                    <Text
+                      center 
+                      status="white"
+                      category="h5"
+                      opacity={index === activeIndex ? 1 : 0.5}
+                      marginRight={10}>
+                      
+                    </Text>
+                  </Layout>
+                  
               );
             })}
           </HStack>
-          <Text category="h4" status="white">
-            {DATA[activeIndex].value}
-          </Text>
-        </VStack>
-        <InputSelect title="Category" value={`Food & Drink`} onPress={goBack} />
-        <InputSelect
-          title="Calendar"
-          value="Today, 20 Sept 2021"
-          onPress={goBack}
-        />
-        <InputSelect title="Memo" value="Nothing" onPress={goBack} />
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={[styles.dash, {borderColor: theme['color-basic-800']}]}>
-          <Icon
-            pack="assets"
-            name="image"
-            style={{tintColor: theme['text-primary-color']}}
-          />
-          <Text category="callout" status="primary" marginLeft={16}>
-            Add Image
-          </Text>
-        </TouchableOpacity>
+        </VStack> 
+        <InputSelect title="Profesor" value="Rubén Martinez" onPress={goBack} />
+        <InputSelect title="Fecha" value="27/03/2023" onPress={goBack}/>
+        <InputSelect title="Hora" value="10:30 hrs" onPress={goBack}/>
+        <Image source={Images.videoCallCircle}
+                /* @ts-ignore */
+                style={styles.image}
+              />
       </Content>
       <Button
-        children="Create Now"
+        children="Unirse a la clase"
         style={[styles.button]}
         accessoryRight={<Icon pack="assets" name="arrow_right" />}
         onPress={goBack}
@@ -100,13 +87,24 @@ const themedStyles = StyleService.create({
   },
   content: {
     paddingHorizontal: 24,
+    
   },
-  box: {
-    padding: 16,
-    borderRadius: 12,
+  boxView: {
+    marginTop: 2,
+    width: 400,
+    justifyContent: "center",
+    alignSelf: "center",
+    marginBottom: -15,
+    marginLeft: -40,
   },
   row: {
     flexDirection: 'row',
+  },
+  image: {
+    width: 100,
+    height: 100,
+    marginTop: 40,
+    alignSelf: "center",
   },
   input: {
     color: 'transparent',
@@ -120,6 +118,7 @@ const themedStyles = StyleService.create({
   button: {
     marginHorizontal: 24,
     marginBottom: 8,
+    backgroundColor: '#D90B14',
   },
   dash: {
     height: 89,
@@ -135,15 +134,8 @@ const themedStyles = StyleService.create({
 
 const DATA = [
   {
-    title: 'Expensive',
-    value: '$1,485.60',
-  },
-  {
-    title: 'Income',
-    value: '$2,485.60',
-  },
-  {
-    title: 'Tranfers',
-    value: '$3,485.60',
+    title: 'Clase 1',
+    date: '27/03/2023',
+    hour: '10:30 hrs'
   },
 ];

@@ -35,12 +35,13 @@ const Finance08 = React.memo(() => {
         accessoryLeft={<NavigationAction status="primary" />}
         accessoryRight={<Avatar source={Images.avatar.avatar08} />}
       />
-      <Content>
-        <Text category="h4" marginLeft={24} marginBottom={24}>
+      <Content contentContainerStyle={styles.contentContainerStyle}>
+        <Text category="h4" marginLeft={10} marginBottom={24}>
           Mis clases
         </Text>
         {DATA_CLASS.map((item, i) => {
           return (
+          <Layout level="2" style={styles.card}>
             <VStack key={i} mt={24} mh={24}>
               <HStack>
                 <Layout style={styles.stag} level="3">
@@ -55,7 +56,7 @@ const Finance08 = React.memo(() => {
                   <HStack mb={10}>
                     <Text category="s2">{item.title}</Text>
                     <Text category="callout" status="danger" onPress={() =>{
-                     navigation.navigate("Detalles");
+                     /*navigation.navigate("Detalles");*/
                     }
                       
                     }>
@@ -69,6 +70,7 @@ const Finance08 = React.memo(() => {
                 </VStack>
               </HStack>
             </VStack>
+            </Layout>
           );
         })}
       </Content>
@@ -87,8 +89,21 @@ const themedStyles = StyleService.create({
     flex: 1,
     paddingBottom: 0,
   },
+  contentContainerStyle: {
+    paddingTop: 15,
+    paddingHorizontal: 24,
+  },
   header: {
     marginRight: 16,
+  },
+  card: {
+    height: 100,
+    borderRadius: 12,
+    marginTop: 1,
+    paddingTop: 2,
+    paddingBottom: 10,
+    paddingHorizontal: -3,
+    marginBottom: 10,
   },
   contentWallet: {
     paddingHorizontal: 24,
