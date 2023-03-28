@@ -1,11 +1,9 @@
 import React, { memo } from "react";
-import { View, Image, TouchableOpacity } from "react-native";
+import { Image, TouchableOpacity } from "react-native";
 import {
   TopNavigation,
-  useTheme,
   StyleService,
   useStyleSheet,
-  Layout,
   Button,
   Icon,
   Input,
@@ -23,7 +21,6 @@ import Images from "assets/images";
 import { useAppDispatch } from "hooks/useRedux";
 import { Formik } from "formik";
 
-import User from "models/User";
 import { register } from "services/AuthService";
 
 const SignUp01 = memo(() => {
@@ -54,7 +51,7 @@ const SignUp01 = memo(() => {
           firstName: "Harim",
           lastName: "Castellanos Altamirano",
           dateOfBirth: "10/08/1982",
-          email: "harim@gmail.com",
+          email: "raanloga@gmail.com",
           password: "123456789",
           phone: "+529516093311",
           address: "Av. de las Flores #321",

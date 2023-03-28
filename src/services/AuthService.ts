@@ -12,6 +12,20 @@ export const register = createAsyncThunk(
   }
 );
 
+export const verify = createAsyncThunk(
+  "auth/verify",
+  async (params: object) => {
+    return (await httpClient.post(`${prefix}/verify`, params)).data;
+  }
+);
+
+export const resendCode = createAsyncThunk(
+  "auth/resendCode",
+  async (email: string) => {
+    return (await httpClient.post(`${prefix}/resendCode`, { email })).data;
+  }
+);
+
 export const login = createAsyncThunk(
   "auth/signin",
   async (params: { email: string; password: string }) => {
