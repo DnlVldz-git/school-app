@@ -1,4 +1,8 @@
 import * as React from "react";
+import { View, Image, TouchableOpacity } from "react-native";
+
+import { useLayout } from "hooks";
+import { useAppDispatch, useAppSelector } from "hooks/useRedux";
 
 import {
   Layout,
@@ -8,32 +12,34 @@ import {
   Avatar,
   Button,
 } from "@ui-kitten/components";
-import { createStackNavigator } from "@react-navigation/stack";
+import Images from "assets/images";
+import { Container, Content, Text, NavigationAction } from "components";
 
-import { NavigationContainer } from "@react-navigation/native";
-import Profile from "./Profile";
-import Suscription from "./Suscription";
+import { navigate } from "navigation/RootNavigation";
+import { logout } from "services/AuthService";
 
-const Stack = createStackNavigator();
+const Suscription = React.memo(() => {
+  const styles = useStyleSheet(themedStyles);
+  const dispatch = useAppDispatch();
+  const currentUser = useAppSelector((state) => state.auth.user);
 
-const Perfil = React.memo(() => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Profile"
-        component={Profile}
-        options={{ headerShown: false }}
+    <Container style={styles.container}>
+      <TopNavigation
+        title={"Suscripción"}
+        accessoryLeft={<NavigationAction status="primary" />}
+        accessoryRight={
+          <NavigationAction icon="circles_four" status="primary" />
+        }
       />
-      <Stack.Screen
-        name="Suscription"
-        component={Suscription}
-        options={{ headerShown: false }}
-      />
-    </Stack.Navigator>
+      <Content contentContainerStyle={styles.contentContainerStyle}>
+        <Text>aasdasdasd</Text>
+      </Content>
+    </Container>
   );
 });
 
-export default Perfil;
+export default Suscription;
 
 const themedStyles = StyleService.create({
   container: {
