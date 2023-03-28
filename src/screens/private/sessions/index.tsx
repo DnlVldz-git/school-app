@@ -27,7 +27,7 @@ import Images from "assets/images";
 
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
 
-import { findAllByStudentId } from "services/SessionsService";
+import { findAllByStudentId } from "services/SessionService";
 
 const Sessions = React.memo(() => {
   const dispatch = useAppDispatch();

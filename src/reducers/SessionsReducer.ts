@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Session from "models/Session";
 
-import { findAllByStudentId } from "services/SessionsService";
+import { findAllByStudentId } from "services/SessionService";
 
 const initialState = {
   sessions: new Array<Session>(),
@@ -9,7 +9,7 @@ const initialState = {
 };
 
 export const sessionsSlice = createSlice({
-  name: "auth",
+  name: "sessions",
   initialState,
   reducers: {},
   extraReducers: (builder) => {

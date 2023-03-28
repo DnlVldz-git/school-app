@@ -5,9 +5,12 @@ import User from "models/User";
 
 const prefix = "/auth";
 
-export const register = createAsyncThunk("auth/signup", async (user: User) => {
-  return (await httpClient.post(`${prefix}/signup`, user)).data;
-});
+export const register = createAsyncThunk(
+  "auth/signup",
+  async (user: object) => {
+    return (await httpClient.post(`${prefix}/signup`, user)).data;
+  }
+);
 
 export const login = createAsyncThunk(
   "auth/signin",

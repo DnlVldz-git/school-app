@@ -12,17 +12,25 @@ import {
 } from "@ui-kitten/components";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import Text from "components/Text";
 import Container from "components/Container";
 import NavigationAction from "components/NavigationAction";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
 import Images from "assets/images";
+
+import { useAppDispatch } from "hooks/useRedux";
+import { Formik } from "formik";
+
+import User from "models/User";
+import { register } from "services/AuthService";
 
 const SignUp01 = memo(() => {
   const { goBack } = useNavigation();
   const { bottom } = useSafeAreaInsets();
   const styles = useStyleSheet(themedStyles);
+  const dispatch = useAppDispatch();
 
   return (
     <Container style={[styles.container, { paddingBottom: bottom + 8 }]}>
@@ -41,67 +49,105 @@ const SignUp01 = memo(() => {
           );
         }}
       />
-
-      <KeyboardAwareScrollView
-        extraHeight={30}
-        enableOnAndroid
-        extraScrollHeight={30}
-        showsVerticalScrollIndicator={false}
+      <Formik
+        initialValues={{
+          firstName: "Harim",
+          lastName: "Castellanos Altamirano",
+          dateOfBirth: "10/08/1982",
+          email: "harim@gmail.com",
+          password: "123456789",
+          phone: "+529516093311",
+          address: "Av. de las Flores #321",
+        }}
+        onSubmit={(values) => {
+          dispatch(register(values));
+        }}
       >
-        <Text marginTop={24} marginBottom={24} center category="h2">
-          Registrar
-        </Text>
+        {({ handleChange, handleBlur, handleSubmit, values }) => (
+          <KeyboardAwareScrollView
+            extraHeight={30}
+            enableOnAndroid
+            extraScrollHeight={30}
+            showsVerticalScrollIndicator={false}
+          >
+            <Text marginTop={24} marginBottom={24} center category="h2">
+              Registrarse
+            </Text>
 
-        <Input
-          style={styles.input}
-          status="primary"
-          placeholder="Nombre(s)"
-          accessoryLeft={(props) => (
-            <Icon {...props} pack="assets" name={"user"} />
-          )}
-        />
-        <Input
-          style={styles.input}
-          status="primary"
-          placeholder="Apellidos"
-          accessoryLeft={(props) => (
-            <Icon {...props} pack="assets" name={"user"} />
-          )}
-        />
-        <Input
-          style={styles.input}
-          status="primary"
-          placeholder="Teléfono"
-          accessoryLeft={(props) => (
-            <Icon {...props} pack="assets" name={"phone"} />
-          )}
-        />
-        <Input
-          style={styles.input}
-          status="primary"
-          placeholder="Dirección"
-          accessoryLeft={(props) => (
-            <Icon {...props} pack="assets" name={"house"} />
-          )}
-        />
-        <Input
-          style={styles.input}
-          status="primary"
-          placeholder="Correo"
-          accessoryLeft={(props) => (
-            <Icon {...props} pack="assets" name={"email"} />
-          )}
-        />
-        <Input
-          style={styles.input}
-          status="primary"
-          placeholder="Contraseña"
-          accessoryLeft={(props) => (
-            <Icon {...props} pack="assets" name={"lock"} />
-          )}
-        />
-        <Button children="Registrarse" style={styles.signIn} />
-      </KeyboardAwareScrollView>
+            <Input
+              style={styles.input}
+              status="primary"
+              placeholder="Nombre(s)"
+              accessoryLeft={(props) => (
+                <Icon {...props} pack="assets" name={"user"} />
+              )}
+              onChangeText={handleChange("firstName")}
+              onBlur={handleBlur("firstName")}
+              value={values.firstName}
+            />
+            <Input
+              style={styles.input}
+              status="primary"
+              placeholder="Apellidos"
+              accessoryLeft={(props) => (
+                <Icon {...props} pack="assets" name={"user"} />
+              )}
+              onChangeText={handleChange("lastName")}
+              onBlur={handleBlur("lastName")}
+              value={values.lastName}
+            />
+            <Input
+              style={styles.input}
+              status="primary"
+              placeholder="Teléfono"
+              accessoryLeft={(props) => (
+                <Icon {...props} pack="assets" name={"phone"} />
+              )}
+              onChangeText={handleChange("phone")}
+              onBlur={handleBlur("phone")}
+              value={values.phone}
+            />
+            <Input
+              style={styles.input}
+              status="primary"
+              placeholder="Dirección"
+              accessoryLeft={(props) => (
+                <Icon {...props} pack="assets" name={"house"} />
+              )}
+              onChangeText={handleChange("address")}
+              onBlur={handleBlur("address")}
+              value={values.address}
+            />
+            <Input
+              style={styles.input}
+              status="primary"
+              placeholder="Correo"
+              accessoryLeft={(props) => (
+                <Icon {...props} pack="assets" name={"email"} />
+              )}
+              onChangeText={handleChange("email")}
+              onBlur={handleBlur("email")}
+              value={values.email}
+            />
+            <Input
+              style={styles.input}
+              status="primary"
+              placeholder="Contraseña"
+              accessoryLeft={(props) => (
+                <Icon {...props} pack="assets" name={"lock"} />
+              )}
+              onChangeText={handleChange("password")}
+              onBlur={handleBlur("password")}
+              value={values.password}
+            />
+            <Button
+              children="Registrarse"
+              style={styles.signIn}
+              onPress={() => handleSubmit()}
+            />
+          </KeyboardAwareScrollView>
+        )}
+      </Formik>
     </Container>
   );
 });
