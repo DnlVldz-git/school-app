@@ -1,7 +1,25 @@
 import axios from "axios";
+import createAuthRefreshInterceptor from "axios-auth-refresh";
+
 import * as SecureStore from "expo-secure-store";
 
-const baseURL = "http://175.1.60.134:8080";
+const baseURL = "http://192.168.1.83:8080";
+
+const getAccessToken = async () => {
+  return await SecureStore.getItemAsync("_accessToken");
+};
+
+const setAccessToken = async (token: string) => {
+  await SecureStore.setItemAsync("_accessToken", token);
+};
+
+const getRefreshToken = async () => {
+  return await SecureStore.getItemAsync("_refreshToken");
+};
+
+const setRefreshToken = async (token: string) => {
+  await SecureStore.setItemAsync("_refreshToken", token);
+};
 
 const httpClient = axios.create({
   baseURL: baseURL,
@@ -10,9 +28,36 @@ const httpClient = axios.create({
   },
 });
 
+const refreshAuthLogic = async (failedRequest: any) => {
+  const token = await getRefreshToken();
+  if (token) {
+    axios
+      .post(
+        `${baseURL}/auth/refresh`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + JSON.parse(token),
+          },
+        }
+      )
+      .then(async (tokenRefreshResponse) => {
+        console.log(tokenRefreshResponse);
+        setAccessToken(tokenRefreshResponse.data.accessToken);
+        setRefreshToken(tokenRefreshResponse.data.user.refreshToken);
+
+        failedRequest.response.config.headers["Authorization"] =
+          "Bearer " + tokenRefreshResponse.data.accessToken;
+        return Promise.resolve();
+      });
+  }
+};
+
+createAuthRefreshInterceptor(httpClient, refreshAuthLogic);
+
 httpClient.interceptors.request.use(
   async function (config) {
-    const token = await SecureStore.getItemAsync("_token");
+    const token = await getAccessToken();
     if (token) {
       config.headers["Authorization"] = `Bearer ${JSON.parse(token)}`;
     }
@@ -33,7 +78,8 @@ httpClient.interceptors.response.use(
     if (error.response) {
       const status = error.response.status;
       if (status === 401) {
-        await SecureStore.deleteItemAsync("_token");
+        await SecureStore.deleteItemAsync("_accessToken");
+        await SecureStore.deleteItemAsync("_refreshToken");
         await SecureStore.deleteItemAsync("_user");
       }
       return Promise.reject(error.response.data);
@@ -55,7 +101,7 @@ const httpFormDataClient = axios.create({
 
 httpFormDataClient.interceptors.request.use(
   async function (config) {
-    const token = await SecureStore.getItemAsync("_token");
+    const token = await getAccessToken();
     if (token) {
       config.headers["Authorization"] = `Bearer ${JSON.parse(token)}`;
     }

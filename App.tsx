@@ -15,63 +15,44 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppContainer from "navigation/AppContainer";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import AssetsIconsPack from "assets/AssetsIconsPack";
+import { Provider } from "react-redux";
+import { store } from "store";
 LogBox.ignoreLogs([
   "AsyncStorage has been extracted from react-native core and will be removed in a future release. It can now be installed and imported from '@react-native-async-storage/async-storage' instead of 'react-native'. See https://github.com/react-native-async-storage/async-storage",
 ]);
 export default function App() {
-  const [theme, setTheme] = React.useState<"light" | "dark">("light");
-
-  React.useEffect(() => {
-    AsyncStorage.getItem("theme").then((value) => {
-      if (value === "light" || value === "dark") setTheme(value);
-    });
-  }, []);
-
-  const toggleTheme = () => {
-    const nextTheme = theme === "light" ? "dark" : "light";
-    AsyncStorage.setItem("theme", nextTheme).then(() => {
-      setTheme(nextTheme);
-    });
-  };
   const isLoadingComplete = useCachedResources();
 
-  if (!isLoadingComplete) {
-    return null;
-  } else {
-    return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaProvider>
-          <IconRegistry icons={[EvaIconsPack, AssetsIconsPack]} />
-          <ApplicationProvider
-            {...eva}
-            theme={
-              theme === "light"
-                ? { ...eva.light, ...customTheme, ...lightTheme }
-                : { ...eva.dark, ...customTheme, ...darkTheme }
-            }
-            /* @ts-ignore */
-            customMapping={customMapping}
-          >
-            <SafeAreaProvider>
-              <StatusBar
-                style={theme === "light" ? "dark" : "light"}
-                translucent={true}
-                backgroundColor={"#00000000"}
-              />
-              <AppContainer />
-            </SafeAreaProvider>
-          </ApplicationProvider>
-        </SafeAreaProvider>
-      </GestureHandlerRootView>
-    );
-  }
-}
+  const AppContent = () => {
+    if (!isLoadingComplete) {
+      return null;
+    }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+    return (
+      <Provider store={store}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <SafeAreaProvider>
+            <IconRegistry icons={[EvaIconsPack, AssetsIconsPack]} />
+            <ApplicationProvider
+              {...eva}
+              theme={{ ...eva.dark, ...customTheme, ...darkTheme }}
+              /* @ts-ignore */
+              customMapping={customMapping}
+            >
+              <SafeAreaProvider>
+                <StatusBar
+                  style="dark"
+                  translucent={true}
+                  backgroundColor={"#00000000"}
+                />
+                <AppContainer />
+              </SafeAreaProvider>
+            </ApplicationProvider>
+          </SafeAreaProvider>
+        </GestureHandlerRootView>
+      </Provider>
+    );
+  };
+
+  return <AppContent></AppContent>;
+}
