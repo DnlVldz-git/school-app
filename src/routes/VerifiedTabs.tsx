@@ -16,6 +16,7 @@ import { LayoutChangeEvent, Pressable, View, StyleSheet } from "react-native";
 
 import Finance00 from "screens/Finance/Finance00";
 import Perfil from "screens/private/profile";
+
 import Sessions from "screens/private/sessions";
 
 const Tab = createBottomTabNavigator();

@@ -1,4 +1,3 @@
-import Person from "./Person";
 import Role from "./Role";
 
 interface UserProperties {
@@ -11,6 +10,7 @@ interface UserProperties {
   email?: string;
   verified?: boolean;
   role?: Role;
+  studentId?: string;
 }
 
 export default class User {
@@ -23,6 +23,7 @@ export default class User {
   email;
   verified = false;
   role;
+  studentId;
 
   constructor(properties: UserProperties = {}) {
     this.id = properties.id || "";
@@ -34,5 +35,6 @@ export default class User {
     this.email = properties.email || "";
     this.role = properties.role || new Role();
     this.verified = properties.verified || false;
+    this.studentId = properties.studentId || "";
   }
 }

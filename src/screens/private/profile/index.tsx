@@ -68,7 +68,6 @@ const Perfil = React.memo(() => {
                 status="white"
                 onPress={() => {
                   dispatch(logout());
-                  navigate("Login");
                 }}
               >
                 Salir
