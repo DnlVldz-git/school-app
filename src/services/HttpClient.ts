@@ -3,7 +3,7 @@ import createAuthRefreshInterceptor from "axios-auth-refresh";
 
 import * as SecureStore from "expo-secure-store";
 
-const baseURL = "http://192.168.1.83:8080";
+const baseURL = "http://175.1.35.170:8080";
 
 const getAccessToken = async () => {
   return await SecureStore.getItemAsync("_accessToken");

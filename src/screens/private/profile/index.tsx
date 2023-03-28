@@ -1,7 +1,6 @@
 import * as React from "react";
 import { View, Image, TouchableOpacity } from "react-native";
 
-import { useLayout } from "hooks";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
 
 import {
@@ -10,12 +9,10 @@ import {
   useStyleSheet,
   TopNavigation,
   Avatar,
-  Button,
 } from "@ui-kitten/components";
 import Images from "assets/images";
 import { Container, Content, Text, NavigationAction } from "components";
 
-import { navigate } from "navigation/RootNavigation";
 import { logout } from "services/AuthService";
 
 const Perfil = React.memo(() => {
