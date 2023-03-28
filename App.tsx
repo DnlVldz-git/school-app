@@ -3,6 +3,7 @@ import { Provider } from "react-redux";
 import FlashMessage from "react-native-flash-message";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 import { useCachedResources } from "hooks";
 
@@ -47,7 +48,11 @@ export default function App() {
                   backgroundColor={"#00000000"}
                 />
                 <AppContainer />
-                <FlashMessage position="top" />
+                <FlashMessage
+                  floating
+                  position="top"
+                  statusBarHeight={getStatusBarHeight()}
+                />
               </SafeAreaProvider>
             </ApplicationProvider>
           </SafeAreaProvider>
