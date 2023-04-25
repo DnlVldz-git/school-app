@@ -3,7 +3,7 @@ import { View, Image, TouchableOpacity } from "react-native";
 
 import { useLayout } from "hooks";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
-
+import Carousel from 'react-native-reanimated-carousel';
 import {
   Layout,
   StyleService,
@@ -11,16 +11,21 @@ import {
   TopNavigation,
   Avatar,
   Button,
+  Icon,
 } from "@ui-kitten/components";
 import Images from "assets/images";
-import { Container, Content, Text, NavigationAction } from "components";
-
+import { Container, Content, Text, NavigationAction,  VStack, HStack, } from "components";
+import {useSharedValue} from 'react-native-reanimated';
 import { navigate } from "navigation/RootNavigation";
 import { logout } from "services/AuthService";
+import Pagination from './Pagination';
 
 const Suscription = React.memo(() => {
+  const {height, width, top, bottom} = useLayout();
   const styles = useStyleSheet(themedStyles);
   const dispatch = useAppDispatch();
+  const progressValue = useSharedValue(0);
+  const [activeIndex, setActiveIndex] = React.useState(0);
   const currentUser = useAppSelector((state) => state.auth.user);
 
   return (
@@ -29,11 +34,29 @@ const Suscription = React.memo(() => {
         title={"Suscripción"}
         accessoryLeft={<NavigationAction status="primary" />}
         accessoryRight={
-          <NavigationAction icon="circles_four" status="primary" />
+          <NavigationAction status="primary" icon="circles_four" />
         }
       />
-      <Content contentContainerStyle={styles.contentContainerStyle}>
-        <Text>aasdasdasd</Text>
+      <Content contentContainerStyle={styles.content}>
+        <VStack level="7" mh={16} border={16} padding={24}>
+          <Text category="h6" status="white" marginBottom={14} style={styles.text}>
+          Actualmente cuentas con la suscripción básica que consta de 3 clases a la semana
+          </Text>
+          <Layout style={styles.iconView} level="9">
+          </Layout>
+          <Image marginBottom={50} marginTop={30} source={Images.trophy}
+            /* @ts-ignore */
+            style={styles.image}
+          />
+          <Text category="h8" status="white" marginBottom={14}>
+          Su plan de suscripción terminará en 3 días
+          </Text>
+          <HStack>
+              <Text category="callout" status="primary">
+                Cancelar
+              </Text>
+          </HStack>
+        </VStack>
       </Content>
     </Container>
   );
@@ -44,88 +67,66 @@ export default Suscription;
 const themedStyles = StyleService.create({
   container: {
     flex: 1,
+    paddingBottom: 0,
   },
-  contentContainerStyle: {
-    paddingTop: 24,
-    paddingHorizontal: 24,
+  content: {
+    paddingTop: 8,
+    flexGrow: 1,
   },
-  avatar: {
+  dot: {
+    transform: [
+      {
+        rotate: '90deg',
+      },
+    ],
+  },
+  text:{
+    textAlign:'justify',
+  },
+  caret: {
+    tintColor: 'text-primary-color',
+  },
+  tag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 9,
+    borderRadius: 8,
+  },
+  grow: {
+    width: 12,
+    height: 12,
+    marginRight: 9,
+  },
+  susbs:{
+    width: 50,
+    height: 50,
+  },
+  image:{
+    width: 100,
+    height: 100,
+    marginHorizontal: "1%",
+    alignItems: "center",
+    justifyContent: "center",
     alignSelf: "center",
-    borderRadius: 32,
   },
-  boxView: {
-    marginTop: 15,
-    width: "80%",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignSelf: "center",
-  },
-  box: {
-    borderRadius: 12,
-    padding: 12,
-    marginTop: 2,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignSelf: "center",
+  service: {
+    flex: 1,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'background-basic-color-3',
+    marginLeft: 16,
   },
   iconView: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 110,
+    height: 110,
+    borderRadius: 60,
     borderWidth: 3,
     position: "absolute",
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
-    top: -36,
+    top: 140,
     borderColor: "background-basic-color-1",
-  },
-  image: {
-    width: 22,
-    height: 22,
-    marginHorizontal: "1%",
-  },
-  icon: {
-    width: 16,
-    height: 16,
-    tintColor: "color-basic-100",
-  },
-  card: {
-    height: 210,
-    borderRadius: 12,
-    marginTop: 15,
-    paddingTop: 14,
-    paddingBottom: 12,
-    paddingHorizontal: 16,
-    marginBottom: 24,
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  arrow: {
-    width: 10,
-    height: 10,
-    marginTop: 8,
-  },
-  note: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 24,
-    marginBottom: 20,
-    flexDirection: "row",
-    backgroundColor: "#E8EDF7",
-    justifyContent: "space-between",
-  },
-  bottom: {
-    position: "absolute",
-    right: 0,
-    left: 0,
-    bottom: 0,
-    paddingTop: 8,
-    paddingHorizontal: 24,
   },
 });

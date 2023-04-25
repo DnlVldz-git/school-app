@@ -29,7 +29,6 @@ const Profile = React.memo(() => {
     <Container style={styles.container}>
       <TopNavigation
         title={"Mi perfil"}
-        accessoryLeft={<NavigationAction status="primary" />}
         accessoryRight={
           <NavigationAction icon="circles_four" status="primary" />
         }
@@ -90,7 +89,7 @@ const Profile = React.memo(() => {
             style={styles.arrow}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.note}>
+        <TouchableOpacity style={styles.note} onPress={() => navigation.navigate('Policy')}>
           <Image
             source={Images.policy}
             /* @ts-ignore */

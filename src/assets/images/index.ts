@@ -12,6 +12,12 @@ const Images = {
   arrow: require("./right-arrow.png"),
   videoCall:require("./video-call.png"),
   videoCallCircle:require("./videocall.png"),
+  emptyBox: require("./emptyBox.png"),
+  trophy: require("./trophy.png"),
+  stars: require("./stars.png"),
+  basic: require("./basic.png"),
+  middle: require("./middle.png"),
+  premium: require("./premium.png"),
   onboarding: {
     onboarding01: require("./onboarding/img_intro_1.png"),
     onboarding02: require("./onboarding/img_intro_2.png"),

@@ -6,6 +6,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import Profile from "./Profile";
 import Suscription from "./Suscription";
+import Policy from "./Policy";
+import NoSuscription from "./nosuscription";
 
 const Stack = createStackNavigator();
 
@@ -20,6 +22,16 @@ const Perfil = React.memo(() => {
       <Stack.Screen
         name="Suscription"
         component={Suscription}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Policy"
+        component={Policy}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="NoSuscription"
+        component={NoSuscription}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
