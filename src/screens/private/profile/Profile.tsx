@@ -76,7 +76,7 @@ const Profile = React.memo(() => {
             </Layout>
           </View>
         </Layout>
-        <TouchableOpacity style={styles.note} onPress={() => navigation.navigate('Suscription')}>
+        <TouchableOpacity style={styles.note} onPress={() => navigation.navigate('NoSuscription')}>
           <Image
             source={Images.subscriptions}
             /* @ts-ignore */
