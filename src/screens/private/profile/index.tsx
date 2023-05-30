@@ -1,13 +1,10 @@
 import * as React from "react";
-import {
-  StyleService,
-} from "@ui-kitten/components";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import Profile from "./Profile";
-import Suscription from "./Suscription";
+import Suscription from "./Subscription";
 import Policy from "./Policy";
-import NoSuscription from "./nosuscription";
+import NoSuscription from "./NoSubscription";
 
 const Stack = createStackNavigator();
 

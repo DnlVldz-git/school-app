@@ -1,169 +1,188 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { AnyAction, Draft, createSlice } from "@reduxjs/toolkit";
+
+import Auth from "models/Auth";
+import { AuthSlice } from "slices/AuthSlice";
+import { deleteItemsFromStorage, errorToast, successToast } from "utils";
+
+import { IPayloadError } from "interfaces/IPayloadError";
+
 import * as SecureStore from "expo-secure-store";
-import {
-  findProfile,
-  login,
-  logout,
-  register,
-  resendCode,
-  updateProfile,
-  verify,
-} from "services/AuthService";
 
-import User from "models/User";
-import { showMessage } from "react-native-flash-message";
-
-const initialState = {
-  user: {} as User,
-  state: "idle",
+type AuthState = {
+  user: Auth | null;
 };
 
-const saveItemsToStorage = (
-  accessToken: string,
-  refreshToken: string,
-  user: User
-) => {
+const saveItemsToStorage = (state: Draft<AuthState>, action: AnyAction) => {
+  const { user, accessToken } = action.payload;
+  state.user = user;
+
   SecureStore.setItemAsync("_accessToken", JSON.stringify(accessToken)).then(
     () => {}
   );
 
-  SecureStore.setItemAsync("_refreshToken", JSON.stringify(refreshToken)).then(
-    () => {}
-  );
+  SecureStore.setItemAsync(
+    "_refreshToken",
+    JSON.stringify(user.refreshToken)
+  ).then(() => {});
 
   SecureStore.setItemAsync("_user", JSON.stringify(user)).then(() => {});
 };
 
-const deleteItemsFromStorage = () => {
-  SecureStore.deleteItemAsync("_accessToken").then(() => {});
-  SecureStore.deleteItemAsync("_refreshToken").then(() => {});
-  SecureStore.deleteItemAsync("_user").then(() => {});
-};
-
 export const authSlice = createSlice({
   name: "auth",
-  initialState,
-  reducers: {},
+  initialState: <AuthState>{
+    user: null,
+  },
+  reducers: {
+    setCredentials: (state, action) => {
+      saveItemsToStorage(state, action);
+    },
+
+    addSession: (state, action) => {
+      const { student } = action.payload;
+      if (student.studentId === state.user?.studentId) {
+        const { student, teacher, ...session } = action.payload;
+        state.user?.sessions.push(session);
+      }
+    },
+
+    addSubscription: (state, action) => {
+      const { studentId, sub } = action.payload;
+      if (studentId === state.user?.studentId) {
+        if (!state.user?.subscriptions && state.user) {
+          state.user.subscriptions = [];
+          state.user?.subscriptions.push(sub);
+        } else {
+          state.user?.subscriptions.push(sub);
+        }
+      }
+    },
+
+    addEventualityToSelf: (state, action) => {
+      const { teacherId, eventuality } = action.payload;
+      if (teacherId === state.user?.teacherId) {
+        state.user?.eventualities.push(eventuality);
+      }
+    },
+
+    updateSubscriptions: (state, action) => {
+      if (state.user) {
+        if (!state.user.subscriptions) {
+          state.user.subscriptions = [];
+        }
+        state.user.subscriptions = action.payload;
+      }
+    },
+  },
   extraReducers: (builder) => {
-    builder
-      .addCase(register.pending, (state) => {
-        state.state = "loading";
-      })
-      .addCase(register.fulfilled, (state, action) => {
-        const { accessToken, user } = action.payload;
-        state.state = "success";
-        state.user = { ...user };
+    builder.addMatcher(
+      AuthSlice.endpoints.login.matchFulfilled,
+      (state, action) => {
+        saveItemsToStorage(state, action);
+        successToast("Bienvenido de vuelta");
+      }
+    );
+    builder.addMatcher(
+      AuthSlice.endpoints.login.matchRejected,
+      (state, action) => {
+        const error = action.payload?.data as IPayloadError;
+        errorToast(error);
+      }
+    );
 
-        saveItemsToStorage(accessToken, user.refreshToken, user);
-      })
-      .addCase(register.rejected, (state, action) => {
-        showMessage({
-          message: action.error.message || "Error",
-          type: "danger",
-        });
-        state.state = "failed";
-      });
-    builder
-      .addCase(login.pending, (state) => {
-        state.state = "loading";
-      })
-      .addCase(login.fulfilled, (state, action) => {
-        const { accessToken, user } = action.payload;
-        state.state = "success";
-        state.user = { ...user };
+    builder.addMatcher(
+      AuthSlice.endpoints.signUp.matchFulfilled,
+      (state, action) => {
+        saveItemsToStorage(state, action);
+      }
+    );
+    builder.addMatcher(
+      AuthSlice.endpoints.signUp.matchRejected,
+      (state, action) => {
+        const error = action.payload?.data as IPayloadError;
+        errorToast(error);
+      }
+    );
 
-        saveItemsToStorage(accessToken, user.refreshToken, user);
-      })
-      .addCase(login.rejected, (state, action) => {
-        showMessage({
-          message: action.error.message || "Error",
-          type: "danger",
-        });
-        state.state = "failed";
-      });
+    builder.addMatcher(
+      AuthSlice.endpoints.verify.matchFulfilled,
+      (state, action) => {
+        saveItemsToStorage(state, action);
+        successToast("Cuenta verificada");
+      }
+    );
+    builder.addMatcher(
+      AuthSlice.endpoints.verify.matchRejected,
+      (state, action) => {
+        const error = action.payload?.data as IPayloadError;
+        errorToast(error);
+      }
+    );
 
-    builder
-      .addCase(verify.pending, (state) => {
-        state.state = "loading";
-      })
-      .addCase(verify.fulfilled, (state, action) => {
-        const { accessToken, user } = action.payload;
-        state.state = "success";
-        state.user = { ...user };
+    builder.addMatcher(
+      AuthSlice.endpoints.resendCode.matchFulfilled,
+      (state, action) => {
+        saveItemsToStorage(state, action);
+        successToast("Se envió un nuevo código a tu correo");
+      }
+    );
+    builder.addMatcher(
+      AuthSlice.endpoints.resendCode.matchRejected,
+      (state, action) => {
+        state.user = null;
+        const error = action.payload?.data as IPayloadError;
+        errorToast(error);
+      }
+    );
 
-        showMessage({
-          message: "Cuenta verificada",
-          type: "success",
-        });
-        saveItemsToStorage(accessToken, user.refreshToken, user);
-      })
-      .addCase(verify.rejected, (state, action) => {
-        showMessage({
-          message: action.error.message || "Error",
-          type: "danger",
-        });
-        state.state = "failed";
-      });
-
-    builder
-      .addCase(resendCode.fulfilled, (state, action) => {
-        showMessage({
-          message: "Código enviado",
-          type: "success",
-        });
-      })
-      .addCase(resendCode.rejected, (state, action) => {
-        showMessage({
-          message: action.error.message || "Error",
-          type: "danger",
-        });
-        state.state = "failed";
-      });
-
-    builder
-      .addCase(updateProfile.fulfilled, (state, action) => {
-        const { accessToken, user } = action.payload;
-        state.state = "success";
-        state.user = { ...user };
-
-        saveItemsToStorage(accessToken, user.refreshToken, user);
-      })
-      .addCase(updateProfile.rejected, (state) => {
-        state.state = "failed";
-      });
-
-    builder
-      .addCase(findProfile.fulfilled, (state, action) => {
-        const { accessToken, user } = action.payload;
-        state.state = "success";
-        state.user = { ...user };
-
-        saveItemsToStorage(accessToken, user.refreshToken, user);
-      })
-      .addCase(findProfile.rejected, (state) => {
-        state.state = "failed";
-        state.user = new User();
-
+    builder.addMatcher(
+      AuthSlice.endpoints.findProfile.matchFulfilled,
+      (state, action) => {
+        saveItemsToStorage(state, action);
+      }
+    );
+    builder.addMatcher(
+      AuthSlice.endpoints.findProfile.matchRejected,
+      (state, action) => {
+        state.user = null;
         deleteItemsFromStorage();
-      });
+        const error = action.payload?.data as IPayloadError;
+        errorToast(error);
+      }
+    );
 
-    builder
-      .addCase(logout.fulfilled, (state, action) => {
-        state.user = new User();
-        state.state = "idle";
-        deleteItemsFromStorage();
-      })
-      .addCase(logout.rejected, (state) => {
-        state.user = new User();
-        state.state = "idle";
+    builder.addMatcher(
+      AuthSlice.endpoints.updateProfile.matchFulfilled,
+      (state, action) => {
+        saveItemsToStorage(state, action);
+        successToast("Perfil actualizado");
+      }
+    );
+    builder.addMatcher(
+      AuthSlice.endpoints.updateProfile.matchRejected,
+      (state, action) => {
+        const error = action.payload?.data as IPayloadError;
+        errorToast(error);
+      }
+    );
 
-        deleteItemsFromStorage();
-        showMessage({
-          message: "Error",
-          type: "danger",
-        });
-      });
+    builder.addMatcher(AuthSlice.endpoints.logout.matchFulfilled, (state) => {
+      state.user = null;
+      deleteItemsFromStorage();
+    });
+    builder.addMatcher(AuthSlice.endpoints.logout.matchRejected, (state) => {
+      state.user = null;
+      deleteItemsFromStorage();
+    });
   },
 });
+
+export const {
+  setCredentials,
+  addSession,
+  addSubscription,
+  addEventualityToSelf,
+  updateSubscriptions,
+} = authSlice.actions;
 
 export default authSlice.reducer;

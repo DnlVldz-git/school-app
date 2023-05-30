@@ -1,145 +1,224 @@
-import * as React from 'react';
-import {View, Image, Alert, StyleSheet, TouchableOpacity} from 'react-native';
-import {useLayout} from 'hooks';
-import {Agenda, DateData, AgendaEntry, AgendaSchedule, Calendar} from 'react-native-calendars';
-import {
-  Layout,
-  StyleService,
-  useStyleSheet,
-  TopNavigation,
-  Avatar,
-  Icon,
-  Button,
-} from '@ui-kitten/components';
-import testIDs from './testIDs';
-import {
-  Container,
-  Content,
-  Text,
-  NavigationAction,
-  VStack,
-  HStack,
-} from 'components';
-import {Component} from 'react';
-import Images from 'assets/images';
-import Carousel from 'react-native-reanimated-carousel';
-import {useSharedValue} from 'react-native-reanimated';
-import { useState } from 'react';
+import { memo, useEffect, useState } from "react";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { DayAgenda } from "react-native-calendars/src/types";
+import { Avatar } from "react-native-paper";
 
-interface State {
-  items?: AgendaSchedule;
-}
-export default class Calendario extends Component<State> {
-  state: State = {
-    items: undefined
+import idCalendar from "./idCalendar";
+import dayjs from "utils/date/dayjs";
+
+import {
+  Agenda,
+  DateData,
+  AgendaEntry,
+  AgendaSchedule,
+} from "react-native-calendars";
+import { TopNavigation } from "@ui-kitten/components";
+
+import { Container, Text, NavigationAction } from "components";
+
+import { days } from "utils";
+import { getWeekRangeBasedOnDay } from "utils/date";
+
+import { IScheduleItem } from "interfaces/ICalendar";
+import { useLazyGetAllTeachersSessionsByLevelQuery } from "slices/SessionSlice";
+import { useAppSelector } from "hooks/useRedux";
+
+import BookSession from "./bookSession";
+
+const Calendario = memo(() => {
+  const [visible, setVisible] = useState(false);
+  const [firstDay, setFirstDay] = useState("");
+
+  const [items, setItems] = useState<AgendaSchedule>({});
+  const [session, setSession] = useState<IScheduleItem>();
+
+  const currentUser = useAppSelector((state) => state.auth.user);
+  const [refresh, { isFetching }] = useLazyGetAllTeachersSessionsByLevelQuery();
+
+  useEffect(() => {
+    setWeek();
+  }, []);
+
+  async function fetchSchedule(start: string, end: string) {
+    const schedule = await refresh(
+      `?level=${
+        currentUser?.level as string
+      }&start=${start}&end=${end}&student=${currentUser?.studentId}`
+    ).unwrap();
+
+    const newItems: AgendaSchedule = {};
+
+    for (let i = 0; i < 7; i++) {
+      const actualDate = dayjs(start).add(i, "day");
+      const dayName = days[actualDate.day()];
+      const dayHoursRange = schedule[dayName];
+      const dayFormatted = actualDate.format().split("T")[0];
+
+      const emptyItem = {
+        name: JSON.stringify({
+          displayText: "N/A",
+          teachers: [],
+          date: "",
+        }),
+        height: 50,
+        day: dayFormatted,
+      };
+
+      if (dayHoursRange) {
+        let itemsForDate: AgendaEntry[] = [];
+
+        Object.keys(dayHoursRange).forEach((hour) => {
+          const teachersAvailable = dayHoursRange[hour];
+
+          if (
+            teachersAvailable.length !== 0 &&
+            dayjs(`${dayFormatted} ${hour}`, "YYYY-MM-DD hh:mm A").isBetween(
+              dayjs(),
+              dayjs().add(8, "day")
+            )
+          ) {
+            const startHour = dayjs(
+              `${dayFormatted} ${hour}`,
+              "YYYY-MM-DD hh:mm A"
+            );
+
+            itemsForDate.push({
+              name: JSON.stringify({
+                date: startHour,
+                teachers: teachersAvailable,
+                displayText: `Espacio disponible - ${hour} : ${startHour
+                  .add(1, "hour")
+                  .format("hh:mm A")}`,
+              }),
+              height: 50,
+              day: dayFormatted,
+            });
+          } else {
+            itemsForDate = [emptyItem];
+          }
+        });
+
+        newItems[dayFormatted] = itemsForDate;
+      } else {
+        newItems[dayFormatted] = [emptyItem];
+      }
+    }
+
+    setItems(newItems);
+  }
+
+  function setWeek(day?: DateData) {
+    const { firstDayOfWeek, lastDayOfWeek } = getWeekRangeBasedOnDay(
+      day ? day.dateString : new Date().toISOString()
+    );
+
+    if (firstDayOfWeek !== firstDay) {
+      setFirstDay(firstDayOfWeek);
+      fetchSchedule(firstDayOfWeek, lastDayOfWeek);
+    }
+  }
+
+  const showDialog = () => setVisible(true);
+
+  const hideDialog = () => setVisible(false);
+
+  const reservationsKeyExtractor = (item: DayAgenda, index: number) => {
+    return `${item?.reservation?.day}${index}`;
   };
 
-   reservationsKeyExtractor = (item, index) => {
-    return `${item?.reservation?.day}${index}`;
-   };
-
-  render() {
-    return (
-      <Container style={styles.container}>
-      <TopNavigation
-        title={'Calendario'}
-        accessoryRight={<NavigationAction icon="circles_four" status="primary" />}
-        accessoryLeft={<NavigationAction icon="waves" status="primary" />}
-      />
-      <Agenda
-        testID={testIDs.agenda.CONTAINER}
-        items={this.state.items}
-        loadItemsForMonth={this.loadItems}
-        selected={'2023-04-27'}
-        renderItem={this.renderItem}
-        renderEmptyDate={this.renderEmptyDate}
-        rowHasChanged={this.rowHasChanged}
-        showClosingKnob={true}
-        markingType={'period'}
-        // markedDates={{
-        //    '2017-05-08': {textColor: '#43515c'},
-        //    '2017-05-09': {textColor: '#43515c'},
-        //    '2017-05-14': {startingDay: true, endingDay: true, color: 'blue'},
-        //    '2017-05-21': {startingDay: true, color: 'blue'},
-        //    '2017-05-22': {endingDay: true, color: 'gray'},
-        //    '2017-05-24': {startingDay: true, color: 'gray'},
-        //    '2017-05-25': {color: 'gray'},
-        //    '2017-05-26': {endingDay: true, color: 'gray'}}}
-        // monthFormat={'yyyy'}
-        // theme={{calendarBackground: 'red', agendaKnobColor: 'green'}}
-        //renderDay={(day, item) => (<Text>{day ? day.day: 'item'}</Text>)}
-        //hideExtraDays={false}
-        //showOnlySelectedDayItems
-         reservationsKeyExtractor={this.reservationsKeyExtractor}
-      />
-      </Container>
-    );
-  }
-
-  loadItems = (day: DateData) => {
-    const items = this.state.items || {};
-
-    setTimeout(() => {
-      for (let i = -15; i < 85; i++) {
-        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = this.timeToString(time);
-
-        if (!items[strTime]) {
-          items[strTime] = [];
-          
-          const numItems = Math.floor(Math.random() * 3 + 1);
-          for (let j = 0; j < numItems; j++) {
-            items[strTime].push({
-              name: 'Item for ' + strTime + ' #' + j,
-              height: Math.max(50, Math.floor(Math.random() * 150)),
-              day: strTime
-            });
-          }
-        } 
-      }
-      
-      const newItems: AgendaSchedule = {};
-      Object.keys(items).forEach(key => {
-        newItems[key] = items[key];
-      });
-      this.setState({
-        items: newItems
-      });
-    }, 1000);
-  }
-
-  renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
-    const fontSize = isFirst ? 16 : 14;
-    const color = isFirst ? 'black' : '#43515c';
+  const renderItem = (reservation: AgendaEntry) => {
+    const sessionSelected: IScheduleItem = JSON.parse(reservation.name);
+    const startHour = dayjs(sessionSelected.date).format("HH:mm A");
+    const endHour = dayjs(sessionSelected.date)
+      .add(1, "hour")
+      .format("HH:mm A");
 
     return (
       <TouchableOpacity
-        testID={testIDs.agenda.ITEM}
-        style={[styles.item, {height: reservation.height}]}
-        onPress={() => Alert.alert(reservation.name)}
+        testID={idCalendar.agenda.ITEM}
+        style={[styles.item, { height: 80 }]}
+        onPress={() => {
+          setSession(sessionSelected);
+          showDialog();
+        }}
       >
-        <Text style={{fontSize, color}}>{reservation.name}</Text>
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ flex: 4, justifyContent: "center" }}>
+            <Text style={{ fontSize: 14, color: "black" }}>
+              {sessionSelected.displayText === "N/A"
+                ? "Sin cupo"
+                : `${startHour} - ${endHour}`}
+            </Text>
+            <Text style={{ fontSize: 22, color: "green", fontWeight: "bold" }}>
+              {sessionSelected.displayText === "N/A"
+                ? "No disponible"
+                : "Disponible"}
+            </Text>
+          </View>
+          <View style={{ flex: 1 }}>
+            <Avatar.Text
+              size={60}
+              label={
+                sessionSelected.displayText === "N/A"
+                  ? "00"
+                  : startHour.substring(0, 2)
+              }
+            />
+          </View>
+        </View>
       </TouchableOpacity>
     );
-  }
+  };
 
-  renderEmptyDate = () => {
+  const renderEmptyDate = () => {
     return (
       <View style={styles.emptyDate}>
         <Text>This is empty date!</Text>
       </View>
     );
-  }
+  };
 
-  rowHasChanged = (r1: AgendaEntry, r2: AgendaEntry) => {
+  const rowHasChanged = (r1: AgendaEntry, r2: AgendaEntry) => {
     return r1.name !== r2.name;
-  }
+  };
 
-  timeToString(time: number) {
-    const date = new Date(time);
-    return date.toISOString().split('T')[0];
-  }
-}
+  return (
+    <Container style={styles.container}>
+      <TopNavigation title={"Calendario"} />
+      <Agenda
+        items={items}
+        refreshing={isFetching}
+        pastScrollRange={1}
+        futureScrollRange={2}
+        showClosingKnob={true}
+        markingType="multi-dot"
+        renderItem={renderItem}
+        rowHasChanged={rowHasChanged}
+        renderEmptyDate={renderEmptyDate}
+        testID={idCalendar.agenda.CONTAINER}
+        minDate={new Date().toLocaleDateString()}
+        selected={new Date().toLocaleDateString()}
+        reservationsKeyExtractor={reservationsKeyExtractor}
+        onDayChange={setWeek}
+        onDayPress={setWeek}
+        theme={{
+          agendaDayTextColor: "black",
+          agendaDayNumColor: "black",
+          agendaTodayColor: "green",
+        }}
+      />
+
+      <BookSession
+        refresh={setWeek}
+        sessionInfo={session}
+        hideDialog={hideDialog}
+        visible={visible}
+      />
+    </Container>
+  );
+});
+
+export default Calendario;
 
 const styles = StyleSheet.create({
   container: {
@@ -147,16 +226,17 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
   },
   item: {
-    backgroundColor: 'white',
-    flex: 1,
-    borderRadius: 5,
+    flex: 2,
     padding: 10,
     marginRight: 10,
-    marginTop: 17
+    marginTop: 17,
+    borderRadius: 5,
+    backgroundColor: "white",
   },
   emptyDate: {
-    height: 15,
     flex: 1,
-    paddingTop: 30
-  }
+    height: 15,
+    paddingTop: 30,
+    backgroundColor: "blue",
+  },
 });

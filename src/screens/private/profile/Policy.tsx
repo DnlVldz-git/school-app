@@ -5,23 +5,21 @@ import { useLayout } from "hooks";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
 
 import {
-  Layout,
   StyleService,
   useStyleSheet,
   TopNavigation,
-  Avatar,
-  Button,
 } from "@ui-kitten/components";
-import Images from "assets/images";
-import { Container, Content, Text, NavigationAction, HStack, VStack, } from "components";
-
-import { navigate } from "navigation/RootNavigation";
-import { logout } from "services/AuthService";
+import {
+  Container,
+  Content,
+  Text,
+  NavigationAction,
+  HStack,
+  VStack,
+} from "components";
 
 const Policy = React.memo(() => {
   const styles = useStyleSheet(themedStyles);
-  const dispatch = useAppDispatch();
-  const currentUser = useAppSelector((state) => state.auth.user);
 
   return (
     <Container style={styles.container}>
@@ -36,18 +34,30 @@ const Policy = React.memo(() => {
         <VStack level="3" padding={24} border={16}>
           <HStack mb={24}>
             <Text category="h8">
-            Los datos personales que recabaremos serán aquellos que usted haya incluido en su perfil de cada red social 
-            con la que ingrese y esté habilitada en la aplicación, y serán tratados y resguardados con
-             base en los principios establecidos en la legislación aplicable, los cuales son: licitud, consentimiento, información, 
-             calidad, finalidad, lealtad, proporcionalidad y responsabilidad. Para cumplir con las finalidades que se mencionan en 
-             el presente Aviso, requerimos que nos proporcione los siguientes Datos Personales: Nombre completo, Correo electrónico, 
-             Teléfono (fijo y móvil), Domicilio o Lugar de residencia actual y previos, Sexo, Estado Civil, Fecha de nacimiento o cumpleaños,
-             Ocupación y Empresa donde labora, Historial laboral, Grado de estudios, Instituciones donde realizó estudios y carrera/área, Idiomas,
-             Cursos y Proyectos, Aptitudes y Validaciones, Certificaciones, Sector en que labora, Extracto, Experiencias de Voluntariado, Reconocimientos y 
-             Premios Personales, su Pasatiempo Favorito, Intereses personales, Habilidades, Deportes que practica, Música, Películas, Libros y Juegos favoritos, 
-             Sitio Web, usuario de Facebook, usuario de LinkedIn, Google+ URL de cuenta, Links de otros perfiles, Links personales, Link canal de YouTube y Fotos 
-             de perfiles. Es importante mencionar que adicionalmente a los datos personales mencionados anteriormente, 
-            el Responsable podrá tratar los siguientes Datos Sensibles: Ideología Política y Creencias Religiosas.
+              Los datos personales que recabaremos serán aquellos que usted haya
+              incluido en su perfil de cada red social con la que ingrese y esté
+              habilitada en la aplicación, y serán tratados y resguardados con
+              base en los principios establecidos en la legislación aplicable,
+              los cuales son: licitud, consentimiento, información, calidad,
+              finalidad, lealtad, proporcionalidad y responsabilidad. Para
+              cumplir con las finalidades que se mencionan en el presente Aviso,
+              requerimos que nos proporcione los siguientes Datos Personales:
+              Nombre completo, Correo electrónico, Teléfono (fijo y móvil),
+              Domicilio o Lugar de residencia actual y previos, Sexo, Estado
+              Civil, Fecha de nacimiento o cumpleaños, Ocupación y Empresa donde
+              labora, Historial laboral, Grado de estudios, Instituciones donde
+              realizó estudios y carrera/área, Idiomas, Cursos y Proyectos,
+              Aptitudes y Validaciones, Certificaciones, Sector en que labora,
+              Extracto, Experiencias de Voluntariado, Reconocimientos y Premios
+              Personales, su Pasatiempo Favorito, Intereses personales,
+              Habilidades, Deportes que practica, Música, Películas, Libros y
+              Juegos favoritos, Sitio Web, usuario de Facebook, usuario de
+              LinkedIn, Google+ URL de cuenta, Links de otros perfiles, Links
+              personales, Link canal de YouTube y Fotos de perfiles. Es
+              importante mencionar que adicionalmente a los datos personales
+              mencionados anteriormente, el Responsable podrá tratar los
+              siguientes Datos Sensibles: Ideología Política y Creencias
+              Religiosas.
             </Text>
           </HStack>
         </VStack>

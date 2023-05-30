@@ -1,5 +1,6 @@
 import React from "react";
 import { Provider } from "react-redux";
+import { PaperProvider } from "react-native-paper";
 import FlashMessage from "react-native-flash-message";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -7,7 +8,7 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 
 import { useCachedResources } from "hooks";
 
-import { store } from "store";
+import store from "store";
 
 import { StatusBar } from "expo-status-bar";
 
@@ -32,31 +33,33 @@ export default function App() {
 
     return (
       <Provider store={store}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <SafeAreaProvider>
-            <IconRegistry icons={[EvaIconsPack, AssetsIconsPack]} />
-            <ApplicationProvider
-              {...eva}
-              theme={{ ...eva.dark, ...customTheme, ...darkTheme }}
-              /* @ts-ignore */
-              customMapping={customMapping}
-            >
-              <SafeAreaProvider>
-                <StatusBar
-                  style="dark"
-                  translucent={true}
-                  backgroundColor={"#00000000"}
-                />
-                <AppContainer />
-                <FlashMessage
-                  floating
-                  position="top"
-                  statusBarHeight={getStatusBarHeight()}
-                />
-              </SafeAreaProvider>
-            </ApplicationProvider>
-          </SafeAreaProvider>
-        </GestureHandlerRootView>
+        <PaperProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <SafeAreaProvider>
+              <IconRegistry icons={[EvaIconsPack, AssetsIconsPack]} />
+              <ApplicationProvider
+                {...eva}
+                theme={{ ...eva.dark, ...customTheme, ...darkTheme }}
+                /* @ts-ignore */
+                customMapping={customMapping}
+              >
+                <SafeAreaProvider>
+                  <StatusBar
+                    style="dark"
+                    translucent={true}
+                    backgroundColor={"#00000000"}
+                  />
+                  <AppContainer />
+                  <FlashMessage
+                    floating
+                    position="top"
+                    statusBarHeight={getStatusBarHeight()}
+                  />
+                </SafeAreaProvider>
+              </ApplicationProvider>
+            </SafeAreaProvider>
+          </GestureHandlerRootView>
+        </PaperProvider>
       </Provider>
     );
   };

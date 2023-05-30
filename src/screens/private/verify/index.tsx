@@ -15,12 +15,12 @@ import { Container, Text, NavigationAction, Content } from "components";
 
 import { COLORS, FONTS } from "utils/theme";
 
-import { resendCode, verify } from "services/AuthService";
+import { useResendCodeMutation, useVerifyMutation } from "slices/AuthSlice";
 
 const Verify = () => {
   const dispatch = useAppDispatch();
   const styles = useStyleSheet(themedStyles);
-  const { state, user } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
 
   const [otp, setOtp] = React.useState({ 1: "", 2: "", 3: "", 4: "" });
 
@@ -28,6 +28,9 @@ const Verify = () => {
   const secondInput = React.useRef<any>();
   const thirdInput = React.useRef<any>();
   const fourthInput = React.useRef<any>();
+
+  const [verify, { isLoading }] = useVerifyMutation();
+  const [resend] = useResendCodeMutation();
 
   const verificarCodigo = async () => {
     try {
@@ -39,7 +42,7 @@ const Verify = () => {
       }
 
       const codigo = `${otp[1]}${otp[2]}${otp[3]}${otp[4]}`;
-      dispatch(verify({ email: user.email, code: codigo }));
+      await verify({ email: user?.email || "", code: codigo });
     } catch (error) {
       console.log(error);
     }
@@ -215,7 +218,9 @@ const Verify = () => {
                 }}
               >
                 <TouchableOpacity
-                  onPress={() => dispatch(resendCode(user.email))}
+                  onPress={async () => {
+                    await resend(user?.email ?? "");
+                  }}
                 >
                   <Text
                     style={{

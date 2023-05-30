@@ -1,5 +1,3 @@
-import Role from "./Role";
-
 interface UserProperties {
   id?: string;
   firstName?: string;
@@ -9,8 +7,8 @@ interface UserProperties {
   dateOfBirth?: string;
   email?: string;
   verified?: boolean;
-  role?: Role;
-  studentId?: string;
+  role?: string;
+  refreshToken?: string;
 }
 
 export default class User {
@@ -21,20 +19,18 @@ export default class User {
   address;
   dateOfBirth;
   email;
-  verified = false;
   role;
-  studentId;
+  verified;
 
   constructor(properties: UserProperties = {}) {
     this.id = properties.id || "";
-    this.firstName = properties.firstName || "Accelerate";
-    this.lastName = properties.lastName || "Ed";
-    this.phone = properties.phone || "7229807997";
-    this.address = properties.address || "No address";
+    this.firstName = properties.firstName || "";
+    this.lastName = properties.lastName || "";
+    this.phone = properties.phone || "";
+    this.address = properties.address || "";
     this.dateOfBirth = properties.dateOfBirth || new Date().toISOString();
     this.email = properties.email || "";
-    this.role = properties.role || new Role();
+    this.role = properties.role || "";
     this.verified = properties.verified || false;
-    this.studentId = properties.studentId || "";
   }
 }

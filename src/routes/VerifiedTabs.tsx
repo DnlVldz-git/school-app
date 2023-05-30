@@ -14,10 +14,10 @@ import Svg, { Path } from "react-native-svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LayoutChangeEvent, Pressable, View, StyleSheet } from "react-native";
 
-import Finance00 from "screens/Finance/Finance00";
 import Perfil from "screens/private/profile";
 
-import Sessions from "screens/private/sessions";
+import Sessions from "screens/private/sessions/";
+import Calendario from "screens/private/calendario";
 
 const Tab = createBottomTabNavigator();
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
@@ -26,7 +26,7 @@ const difference = 15;
 const VerifiedTabs = () => {
   return (
     <Tab.Navigator
-      initialRouteName="Calendario"
+      initialRouteName="Sesiones"
       screenOptions={() => ({
         headerShown: false,
       })}
@@ -45,7 +45,7 @@ const VerifiedTabs = () => {
             />
           ),
         }}
-        children={() => <Finance00 screen={"Videosesión"} />}
+        component={Calendario}
       />
 
       <Tab.Screen
@@ -231,7 +231,7 @@ const TabBarComponent = ({
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: "#7d67e0",
+    backgroundColor: "#282C31",
   },
   activeBackground: {
     position: "absolute",
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
   componentCircle: {
     flex: 1,
     borderRadius: 30,
-    backgroundColor: "#7d67e0",
+    backgroundColor: "#282C31",
   },
   iconContainer: {
     position: "absolute",

@@ -1,8 +1,7 @@
 import * as React from "react";
 import { View, Image, TouchableOpacity } from "react-native";
 
-import { useLayout } from "hooks";
-import { useAppDispatch, useAppSelector } from "hooks/useRedux";
+import { useAppSelector } from "hooks/useRedux";
 
 import {
   Layout,
@@ -10,20 +9,19 @@ import {
   useStyleSheet,
   TopNavigation,
   Avatar,
-  Button,
 } from "@ui-kitten/components";
 import Images from "assets/images";
 import { Container, Content, Text, NavigationAction } from "components";
 
-import { navigate } from "navigation/RootNavigation";
-import { logout } from "services/AuthService";
+import { useLogoutMutation } from "slices/AuthSlice";
 import { useNavigation } from "@react-navigation/native";
 
 const Profile = React.memo(() => {
-  const styles = useStyleSheet(themedStyles);
-  const dispatch = useAppDispatch();
-  const currentUser = useAppSelector((state) => state.auth.user);
   const navigation = useNavigation();
+  const styles = useStyleSheet(themedStyles);
+  const currentUser = useAppSelector((state) => state.auth.user);
+
+  const [logoff] = useLogoutMutation();
 
   return (
     <Container style={styles.container}>
@@ -41,10 +39,10 @@ const Profile = React.memo(() => {
             style={styles.avatar}
           />
           <Text category="h6" marginTop={16} center>
-            {`${currentUser.firstName} ${currentUser.lastName}`}
+            {`${currentUser?.firstName} ${currentUser?.lastName}`}
           </Text>
           <Text category="footnote" status="snow" marginTop={4} center>
-            {currentUser.email}
+            {currentUser?.email}
           </Text>
           <View style={styles.boxView}>
             <Layout style={styles.box} level="11">
@@ -67,8 +65,8 @@ const Profile = React.memo(() => {
                 category="callout"
                 center
                 status="white"
-                onPress={() => {
-                  dispatch(logout());
+                onPress={async () => {
+                  await logoff({});
                 }}
               >
                 Salir
@@ -76,7 +74,10 @@ const Profile = React.memo(() => {
             </Layout>
           </View>
         </Layout>
-        <TouchableOpacity style={styles.note} onPress={() => navigation.navigate('NoSuscription')}>
+        <TouchableOpacity
+          style={styles.note}
+          onPress={() => navigation.navigate("NoSuscription")}
+        >
           <Image
             source={Images.subscriptions}
             /* @ts-ignore */
@@ -89,7 +90,10 @@ const Profile = React.memo(() => {
             style={styles.arrow}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.note} onPress={() => navigation.navigate('Policy')}>
+        <TouchableOpacity
+          style={styles.note}
+          onPress={() => navigation.navigate("Policy")}
+        >
           <Image
             source={Images.policy}
             /* @ts-ignore */

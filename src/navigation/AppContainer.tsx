@@ -14,18 +14,10 @@ const AppContainer = () => {
 
   useEffect(() => {}, [currentUser]);
 
-  const isLoggedIn = () => {
-    return currentUser.id && currentUser.id !== "";
-  };
-
-  const isVerified = () => {
-    return currentUser.id && currentUser.verified;
-  };
-
   return (
     <NavigationContainer>
-      {isLoggedIn() ? (
-        isVerified() ? (
+      {currentUser ? (
+        currentUser.verified ? (
           <VerifiedTabs />
         ) : (
           <NoVerifiedTabs />

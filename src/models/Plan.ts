@@ -2,24 +2,27 @@ interface PlanProperties {
   id?: number;
   name?: string;
   description?: string;
+  status?: boolean;
   price?: number;
   paypalId?: string;
-  expirationDate?: string;
+  credits?: number;
 }
 
 export default class Plan {
   id;
   name;
   description;
+  status;
   price;
   paypalId;
-  expirationDate;
+  credits;
   constructor(properties: PlanProperties = {}) {
     this.id = properties.id || -1;
     this.name = properties.name || "Finibus Bonorum";
     this.description = properties.description || "Lorem ipsum dolor sit amet";
+    this.status = properties.status || false;
     this.price = properties.price || 0;
     this.paypalId = properties.paypalId || "XXXXXX";
-    this.expirationDate = properties.expirationDate || new Date().toISOString();
+    this.credits = properties.credits || -1;
   }
 }

@@ -1,12 +1,12 @@
-import React from 'react';
-import {View, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import useLayout from 'hooks/useLayout';
+import React from "react";
+import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
+import useLayout from "hooks/useLayout";
 
-import Text from 'components/Text';
+import Text from "components/Text";
 
-import dayjs from 'utils/dayjs';
-import {Icon} from '@ui-kitten/components';
-import {formatDefault} from 'utils/formatValue';
+import dayjs from "utils/date/dayjs";
+import { Icon } from "@ui-kitten/components";
+import { formatDefault } from "utils/formatValue";
 
 interface BillFragment {
   id: string;
@@ -24,18 +24,19 @@ interface BillProps {
   onPress?(): void;
 }
 
-const Bill = ({item, onPress}: BillProps) => {
-  const {width} = useLayout();
-  const {amount, date, category} = item;
+const Bill = ({ item, onPress }: BillProps) => {
+  const { width } = useLayout();
+  const { amount, date, category } = item;
 
   return (
     <TouchableOpacity
       activeOpacity={0.7}
       style={[
         styles.container,
-        {width: width - 68, backgroundColor: category?.color},
+        { width: width - 68, backgroundColor: category?.color },
       ]}
-      onPress={onPress}>
+      onPress={onPress}
+    >
       <View style={styles.top}>
         <View style={styles.row}>
           <Icon pack="assets" name={category.icon} style={styles.icon} />
@@ -43,13 +44,13 @@ const Bill = ({item, onPress}: BillProps) => {
             <Text category="h6" status="white">
               {category?.name}
             </Text>
-            <Text category="h4" marginTop={8} status='white'>
+            <Text category="h4" marginTop={8} status="white">
               {formatDefault(amount.toFixed(2))}
             </Text>
           </View>
         </View>
         <Text category="body" status="white">
-          {dayjs(date).format('DD MMM')}
+          {dayjs(date).format("DD MMM")}
         </Text>
       </View>
     </TouchableOpacity>
@@ -68,11 +69,11 @@ const styles = StyleSheet.create({
     paddingRight: 16,
   },
   top: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   icon: {
     width: 32,

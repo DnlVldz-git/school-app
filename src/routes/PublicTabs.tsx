@@ -5,8 +5,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import getIcon from "utils/constants";
 import { Icon, useTheme } from "@ui-kitten/components";
 
-import SignUp01 from "screens/public/signup/SignUp01";
-import Authenticate from "screens/public/login/Authenticate";
+import Register from "screens/public/register";
+import Login from "screens/public/login";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,8 +40,8 @@ const PublicTabs = () => {
           tabBarInactiveTintColor: "gray",
         })}
       >
-        <Tab.Screen name="Login" component={Authenticate} />
-        <Tab.Screen name="Registro" component={SignUp01} />
+        <Tab.Screen name="Login" component={Login} />
+        <Tab.Screen name="Registro" component={Register} />
       </Tab.Navigator>
     </View>
   );

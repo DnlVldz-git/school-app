@@ -1,16 +1,16 @@
 interface RoleProperties {
   id?: number;
   name?: string;
-  permits?: string[];
+  description?: string;
 }
 
 export default class Role {
   id;
   name;
-  permits;
+  description;
   constructor(properties: RoleProperties = {}) {
     this.id = properties.id || -1;
-    this.name = properties.name || "Usuario";
-    this.permits = properties.permits || [];
+    this.name = properties.name || "";
+    this.description = properties.description || "";
   }
 }

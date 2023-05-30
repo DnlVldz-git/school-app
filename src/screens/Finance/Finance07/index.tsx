@@ -2,7 +2,7 @@ import * as React from "react";
 import { View, Image, TouchableOpacity } from "react-native";
 
 import { useLayout } from "hooks";
-import { useAppDispatch, useAppSelector } from "hooks/useRedux";
+import { useAppSelector } from "hooks/useRedux";
 
 import {
   Layout,
@@ -14,14 +14,16 @@ import {
 } from "@ui-kitten/components";
 import Images from "assets/images";
 import { Container, Content, Text, NavigationAction } from "components";
-import { logout } from "services/AuthService";
+
+import { useLogoutMutation } from "slices/AuthSlice";
 
 const Perfil = React.memo(() => {
   const { bottom } = useLayout();
 
   const styles = useStyleSheet(themedStyles);
-  const dispatch = useAppDispatch();
   const currentUser = useAppSelector((state) => state.auth.user);
+
+  const [logoff] = useLogoutMutation();
 
   return (
     <Container style={styles.container}>
@@ -40,10 +42,10 @@ const Perfil = React.memo(() => {
             style={styles.avatar}
           />
           <Text category="h6" marginTop={16} center>
-            {`${currentUser.firstName} ${currentUser.lastName}`}
+            {`${currentUser?.firstName} ${currentUser?.lastName}`}
           </Text>
           <Text category="footnote" status="snow" marginTop={4} center>
-            {currentUser.email}
+            {currentUser?.email}
           </Text>
           <View style={styles.boxView}>
             <Layout style={styles.box} level="5">
@@ -118,8 +120,8 @@ const Perfil = React.memo(() => {
         <Button
           activeOpacity={0.7}
           children="Cerrar sesión"
-          onPress={() => {
-            dispatch(logout());
+          onPress={async () => {
+            await logoff({});
           }}
         />
       </Layout>
