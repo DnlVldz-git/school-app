@@ -1,7 +1,7 @@
-import * as React from 'react';
-import {TouchableOpacity} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {useLayout} from 'hooks';
+import * as React from "react";
+import { TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { useLayout } from "hooks";
 import {
   StyleService,
   useStyleSheet,
@@ -10,7 +10,7 @@ import {
   Icon,
   Button,
   Divider,
-} from '@ui-kitten/components';
+} from "@ui-kitten/components";
 
 import {
   Container,
@@ -19,14 +19,14 @@ import {
   NavigationAction,
   HStack,
   VStack,
-} from 'components';
-import Images from 'assets/images';
-import ProgressBar from 'components/ProgressBar';
+} from "components";
+import Images from "assets/images";
+import ProgressBar from "components/ProgressBar";
 
 const Finance04 = React.memo(() => {
   const theme = useTheme();
-  const {goBack} = useNavigation();
-  const {height, width, top, bottom} = useLayout();
+  const { goBack } = useNavigation();
+  const { height, width, top, bottom } = useLayout();
   const styles = useStyleSheet(themedStyles);
 
   return (
@@ -41,7 +41,10 @@ const Finance04 = React.memo(() => {
             </Text>
           </VStack>
         </HStack>
-        <NavigationAction icon="bell_ring" status="primary" />
+        <HStack>
+          <NavigationAction icon="bell_ring" status="primary" />
+          <NavigationAction icon="bell_ring" status="primary" />
+        </HStack>
       </HStack>
       <Content contentContainerStyle={styles.content}>
         <VStack level="5" border={12} padding={24} mb={16} mt={24} mh={16}>
@@ -68,12 +71,12 @@ const Finance04 = React.memo(() => {
         <HStack mb={24} mh={16}>
           <Button
             style={styles.button}
-            children={'Deposit'}
+            children={"Deposit"}
             accessoryLeft={<Icon pack="assets" name="plus" />}
           />
           <Button
-            style={[styles.button, {marginHorizontal: 16}]}
-            children={'Withdraw'}
+            style={[styles.button, { marginHorizontal: 16 }]}
+            children={"Withdraw"}
             status="transparent-primary"
             accessoryLeft={<Icon pack="assets" name="download" />}
           />
@@ -96,12 +99,13 @@ const Finance04 = React.memo(() => {
                 border={16}
                 key={i}
                 mr={16}
-                minWidth={width - 52}>
+                minWidth={width - 52}
+              >
                 <HStack justify="flex-start" mb={16}>
                   <Text marginRight={12} category="h1">
                     🏠
                   </Text>
-                  <VStack style={{flex: 1}}>
+                  <VStack style={{ flex: 1 }}>
                     <Text category="callout">New House</Text>
                     <HStack itemsCenter>
                       <Text category="subhead" status="platinum">
@@ -135,7 +139,7 @@ const Finance04 = React.memo(() => {
                 <Text category="h1" marginRight={8}>
                   {item.title}
                 </Text>
-                <VStack style={{flex: 1}}>
+                <VStack style={{ flex: 1 }}>
                   <Text category="h7">{item.describe}</Text>
                   <Text category="c1" status="platinum" marginBottom={12}>
                     {item.time}
@@ -168,94 +172,94 @@ const themedStyles = StyleService.create({
   eyeClose: {
     width: 16,
     height: 16,
-    tintColor: 'text-white-color',
+    tintColor: "text-white-color",
   },
   button: {
     flex: 1,
   },
   buttonOption: {
-    backgroundColor: '#5784E820',
+    backgroundColor: "#5784E820",
     width: 48,
     height: 48,
     borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   menu: {
     transform: [
       {
-        rotate: '90deg',
+        rotate: "90deg",
       },
     ],
   },
   caretIcon: {
     width: 16,
     height: 16,
-    tintColor: 'text-primary-color',
+    tintColor: "text-primary-color",
   },
 });
 
 const DATA_Portfolios = [
   {
-    title: '🏠',
-    describe: 'New House',
-    date: '10/10/2022 17:04',
+    title: "🏠",
+    describe: "New House",
+    date: "10/10/2022 17:04",
     progress: 25 / 100,
-    deposit: '$30,000',
-    target: '$800,000',
+    deposit: "$30,000",
+    target: "$800,000",
   },
   {
-    title: '🍔',
-    describe: 'Food & Drink',
-    date: '10/10/2022 17:04',
+    title: "🍔",
+    describe: "Food & Drink",
+    date: "10/10/2022 17:04",
     progress: 25 / 100,
-    deposit: '$30,000',
-    target: '$800,000',
+    deposit: "$30,000",
+    target: "$800,000",
   },
   {
-    title: '🏠',
-    describe: 'New House',
-    date: '10/10/2022 17:04',
+    title: "🏠",
+    describe: "New House",
+    date: "10/10/2022 17:04",
     progress: 25 / 100,
-    deposit: '$30,000',
-    target: '$800,000',
+    deposit: "$30,000",
+    target: "$800,000",
   },
   {
-    title: '🏠',
-    describe: 'New House',
-    date: '10/10/2022 17:04',
+    title: "🏠",
+    describe: "New House",
+    date: "10/10/2022 17:04",
     progress: 25 / 100,
-    deposit: '$30,000',
-    target: '$800,000',
+    deposit: "$30,000",
+    target: "$800,000",
   },
 ];
 const DATA_Transaction = [
   {
-    id: '1',
-    title: '🍔',
-    describe: 'Food & Drink',
-    progress: '$15.40',
-    time: '10/10/2022 06:27',
+    id: "1",
+    title: "🍔",
+    describe: "Food & Drink",
+    progress: "$15.40",
+    time: "10/10/2022 06:27",
   },
   {
-    id: '1',
-    title: '⚽',
-    describe: 'Sports',
-    progress: '$15.40',
-    time: '10/10/2022 06:27',
+    id: "1",
+    title: "⚽",
+    describe: "Sports",
+    progress: "$15.40",
+    time: "10/10/2022 06:27",
   },
   {
-    id: '1',
-    title: '👙',
-    describe: 'Shopping',
-    progress: '$15.40',
-    time: '10/10/2022 06:27',
+    id: "1",
+    title: "👙",
+    describe: "Shopping",
+    progress: "$15.40",
+    time: "10/10/2022 06:27",
   },
   {
-    id: '1',
-    title: '✈️',
-    describe: 'Travel',
-    progress: '$15.40',
-    time: '10/10/2022 06:27',
+    id: "1",
+    title: "✈️",
+    describe: "Travel",
+    progress: "$15.40",
+    time: "10/10/2022 06:27",
   },
 ];

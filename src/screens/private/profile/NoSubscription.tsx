@@ -26,26 +26,32 @@ import {
 import Images from "assets/images";
 
 import Pagination from "./Pagination";
+import { useAppSelector } from "hooks/useRedux";
+import { useGetAllActivePlansQuery } from "slices/PlanSlice";
+import { useCreateSubscriptionMutation } from "slices/SubscriptionSlice";
 
-const nosuscription = React.memo(() => {
-  const { height, width, top, bottom } = useLayout();
+const NoSubscription = React.memo(() => {
+  const { height, width } = useLayout();
   const styles = useStyleSheet(themedStyles);
+  const activePlans = useAppSelector((state) => state.plans.items);
 
-  const [activeIndex, setActiveIndex] = React.useState(0);
   const progressValue = useSharedValue(0);
+  const [activeIndex, setActiveIndex] = React.useState(0);
+
+  const { isFetching } = useGetAllActivePlansQuery({});
+  const [subscribe] = useCreateSubscriptionMutation();
 
   return (
     <Container style={styles.container}>
-      <TopNavigation
-        title={"Suscripción"}
-        accessoryLeft={<NavigationAction status="primary" />}
-        accessoryRight={
-          <NavigationAction status="primary" icon="circles_four" />
-        }
-      />
+      <TopNavigation title={"Suscripción"} />
+
       <Content contentContainerStyle={styles.content}>
-        <VStack level="1" mh={16} border={16} padding={24}>
-          <Text category="h6" marginBottom={7} style={styles.text}>
+        <VStack level="1" mh={16} border={16} padding={24} mt={-20}>
+          <Text
+            category="h6"
+            marginBottom={7}
+            style={(styles.text, { textAlign: "center" })}
+          >
             Actualmente no cuentas con alguna suscripción
           </Text>
           <Layout style={styles.iconView} level="9"></Layout>
@@ -54,15 +60,15 @@ const nosuscription = React.memo(() => {
             marginTop={30}
             source={Images.stars}
             /* @ts-ignore */
-            style={styles.susbs}
+            style={styles.subs}
           />
-          <Text category="h8" marginBottom={3}>
-            Suscribete algún plan para acceder a las clases y materiales que se
-            tienen preparado para ti!!
+          <Text category="h8" style={{ textAlign: "center" }}>
+            ¡Elige un plan para iniciar tu formación y acceder al material
+            preparado exclusivamente para ti!
           </Text>
         </VStack>
 
-        <Text category="h6" marginLeft={16} marginTop={24} marginBottom={16}>
+        <Text category="h6" marginLeft={16} marginTop={4} marginBottom={16}>
           Paquetes de suscripción
         </Text>
         <VStack level="2" mh={2} border={1} padding={24}>
@@ -71,58 +77,47 @@ const nosuscription = React.memo(() => {
               width={width * 0.7}
               vertical={false}
               style={{ width: "100%", height: "100%" }}
-              height={330 * (height / 812)}
-              data={DATA}
+              height={290 * (height / 812)}
+              data={activePlans}
               pagingEnabled
               loop={false}
               onSnapToItem={(index) => setActiveIndex(index)}
               onProgressChange={(_, absoluteProgress) =>
                 (progressValue.value = absoluteProgress)
               }
-              renderItem={({ item }) => {
+              renderItem={({ item, index }) => {
                 return (
-                  <VStack level="1" style={styles.service} padding={20} pb={16}>
-                    <HStack>
-                      <Text category="h6">{item.title}</Text>
-                      <Icon pack="assets" name="shield" />
-                    </HStack>
-                    <Text
-                      category="body"
-                      status="success"
-                      marginTop={8}
-                      marginBottom={20}
-                    >
-                      {item.pay}
-                    </Text>
+                  <VStack level="1" style={styles.service} padding={20}>
+                    <VStack>
+                      <HStack>
+                        <Text category="h6">{item.name}</Text>
+                        <Icon pack="assets" name="shield" />
+                      </HStack>
+                      <Text category="body" status="success">
+                        {new Intl.NumberFormat("es-MX", {
+                          style: "currency",
+                          currency: "MXN",
+                        }).format(item.price)}
+                      </Text>
+                    </VStack>
 
-                    <HStack wrap mt={10} mb={12}>
-                      {item.data.map((item, i) => {
-                        return (
-                          <HStack
-                            key={i}
-                            itemsCenter
-                            style={{ width: 80 }}
-                            mb={12}
-                          >
-                            <View
-                              style={{
-                                backgroundColor: item.color,
-                                width: 8,
-                                height: 8,
-                                borderRadius: 99,
-                              }}
-                            />
-                            <Text category="body">{item.title}</Text>
-                            <Image
-                              marginBottom={50}
-                              marginTop={30}
-                              source={Images.premium}
-                              /* @ts-ignore */
-                              style={styles.image}
-                            />
-                          </HStack>
-                        );
-                      })}
+                    <HStack wrap>
+                      <VStack
+                        key={index}
+                        style={{
+                          alignItems: "center",
+                          width: "100%",
+                        }}
+                      >
+                        <Text category="h7" marginBottom={15}>
+                          {`${item.credits} créditos\ndisponibles`}
+                        </Text>
+                        <Image
+                          source={Images.premium}
+                          /* @ts-ignore */
+                          style={styles.image}
+                        />
+                      </VStack>
                     </HStack>
                     <Button children={"Comprar ahora"} />
                   </VStack>
@@ -131,25 +126,12 @@ const nosuscription = React.memo(() => {
             />
           </View>
         </VStack>
-        <HStack justify="center" mt={16}>
-          {DATA.map((item, i) => {
-            return (
-              <Pagination
-                key={i}
-                index={i}
-                backgroundColor={"#5784E8"}
-                length={DATA.length}
-                animValue={progressValue}
-              />
-            );
-          })}
-        </HStack>
       </Content>
     </Container>
   );
 });
 
-export default nosuscription;
+export default NoSubscription;
 
 const themedStyles = StyleService.create({
   container: {
@@ -157,7 +139,6 @@ const themedStyles = StyleService.create({
     paddingBottom: 0,
   },
   content: {
-    paddingTop: 8,
     flexGrow: 1,
   },
   dot: {
@@ -185,7 +166,7 @@ const themedStyles = StyleService.create({
     height: 12,
     marginRight: 9,
   },
-  susbs: {
+  subs: {
     width: 120,
     height: 120,
     marginHorizontal: "1%",
@@ -194,8 +175,8 @@ const themedStyles = StyleService.create({
     alignSelf: "center",
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 75,
+    height: 75,
     marginHorizontal: "1%",
     alignItems: "center",
     justifyContent: "center",
@@ -221,21 +202,3 @@ const themedStyles = StyleService.create({
     borderColor: "background-basic-color-1",
   },
 });
-
-const DATA = [
-  {
-    title: "Paquete básico",
-    pay: "MXN 800",
-    data: [{ title: "3 clases a la semana", color: "#5784E8" }],
-  },
-  {
-    title: "Paquete intermedio",
-    pay: "MXN 1,200",
-    data: [{ title: "4 clases a la semana", color: "#FFDE70" }],
-  },
-  {
-    title: "Paquete premium",
-    pay: "MXN 1,600",
-    data: [{ title: "5 clases a la semana", color: "#E5CABF" }],
-  },
-];

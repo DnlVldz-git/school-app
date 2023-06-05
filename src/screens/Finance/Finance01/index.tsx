@@ -1,7 +1,7 @@
-import * as React from 'react';
-import {Image, TouchableOpacity} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {useLayout} from 'hooks';
+import * as React from "react";
+import { Image, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { useLayout } from "hooks";
 import {
   StyleService,
   useStyleSheet,
@@ -11,7 +11,7 @@ import {
   Button,
   Avatar,
   Divider,
-} from '@ui-kitten/components';
+} from "@ui-kitten/components";
 
 import {
   Container,
@@ -20,8 +20,8 @@ import {
   NavigationAction,
   HStack,
   VStack,
-} from 'components';
-import Images from 'assets/images';
+} from "components";
+import Images from "assets/images";
 
 const Finance01 = React.memo(() => {
   const styles = useStyleSheet(themedStyles);
@@ -30,11 +30,9 @@ const Finance01 = React.memo(() => {
     <Container style={styles.container}>
       <TopNavigation
         accessoryLeft={
-          <Image
-            source={Images.logo}
-            //@ts-ignore
-            style={styles.logo}
-          />
+          <Text category="h6" style={{ paddingHorizontal: 10 }}>
+            Hola
+          </Text>
         }
         accessoryRight={<NavigationAction icon="bell_ring" status="primary" />}
       />
@@ -58,12 +56,12 @@ const Finance01 = React.memo(() => {
         <HStack mb={24}>
           <Button
             style={styles.button}
-            children={'Send'}
+            children={"Send"}
             accessoryLeft={<Icon pack="assets" name="upload" />}
           />
           <Button
-            style={[styles.button, {marginHorizontal: 16}]}
-            children={'Send'}
+            style={[styles.button, { marginHorizontal: 16 }]}
+            children={"Send"}
             status="danger"
             accessoryLeft={<Icon pack="assets" name="download" />}
           />
@@ -84,7 +82,7 @@ const Finance01 = React.memo(() => {
               //@ts-ignore
               style={styles.avatar}
             />
-            <VStack style={{flex: 1}}>
+            <VStack style={{ flex: 1 }}>
               <Text category="h8">Repay Marina Kerr</Text>
               <HStack mt={4}>
                 <Text category="subhead" status="platinum">
@@ -108,7 +106,7 @@ const Finance01 = React.memo(() => {
                 <Text category="h1" marginRight={8}>
                   {item.title}
                 </Text>
-                <VStack style={{flex: 1}}>
+                <VStack style={{ flex: 1 }}>
                   <Text category="h7">{item.describe}</Text>
                   <Text category="c1" status="platinum" marginBottom={12}>
                     {item.time}
@@ -150,7 +148,7 @@ const themedStyles = StyleService.create({
   menu: {
     transform: [
       {
-        rotate: '90deg',
+        rotate: "90deg",
       },
     ],
   },
@@ -158,12 +156,12 @@ const themedStyles = StyleService.create({
     flex: 1,
   },
   buttonOption: {
-    backgroundColor: '#5784E820',
+    backgroundColor: "#5784E820",
     width: 48,
     height: 48,
     borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   avatar: {
     width: 48,
@@ -173,37 +171,37 @@ const themedStyles = StyleService.create({
   caret: {
     width: 16,
     height: 16,
-    tintColor: 'text-primary-color',
+    tintColor: "text-primary-color",
   },
 });
 
 const DATA_Transaction = [
   {
-    id: '1',
-    title: '🍔',
-    describe: 'Food & Drink',
-    prime: '$15.40',
-    time: '10/10/2022 06:27',
+    id: "1",
+    title: "🍔",
+    describe: "Food & Drink",
+    prime: "$15.40",
+    time: "10/10/2022 06:27",
   },
   {
-    id: '1',
-    title: '⚽',
-    describe: 'Sports',
-    prime: '$15.40',
-    time: '10/10/2022 06:27',
+    id: "1",
+    title: "⚽",
+    describe: "Sports",
+    prime: "$15.40",
+    time: "10/10/2022 06:27",
   },
   {
-    id: '1',
-    title: '👙',
-    describe: 'Shopping',
-    prime: '$15.40',
-    time: '10/10/2022 06:27',
+    id: "1",
+    title: "👙",
+    describe: "Shopping",
+    prime: "$15.40",
+    time: "10/10/2022 06:27",
   },
   {
-    id: '1',
-    title: '✈️',
-    describe: 'Travel',
-    prime: '$15.40',
-    time: '10/10/2022 06:27',
+    id: "1",
+    title: "✈️",
+    describe: "Travel",
+    prime: "$15.40",
+    time: "10/10/2022 06:27",
   },
 ];

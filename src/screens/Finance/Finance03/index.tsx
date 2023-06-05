@@ -1,16 +1,16 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   StyleService,
   useStyleSheet,
   TopNavigation,
   ViewPager,
-} from '@ui-kitten/components';
+} from "@ui-kitten/components";
 
-import {Container, Text, NavigationAction, HStack} from 'components';
-import Segment from './Segment';
-import Expense from './Expense';
-import Income from './Income';
-import Timeline from './Timeline';
+import { Container, Text, NavigationAction, HStack } from "components";
+import Segment from "./Segment";
+import Expense from "./Expense";
+import Income from "./Income";
+import Timeline from "./Timeline";
 
 const Finance03 = React.memo(() => {
   const styles = useStyleSheet(themedStyles);
@@ -20,7 +20,7 @@ const Finance03 = React.memo(() => {
   return (
     <Container style={styles.container}>
       <TopNavigation
-        title={'Chart Details'}
+        title={"Chart Details"}
         accessoryLeft={<NavigationAction status="primary" />}
         accessoryRight={
           <NavigationAction icon="circles_four" status="primary" />
@@ -36,10 +36,11 @@ const Finance03 = React.memo(() => {
         <Timeline selectTab={selectedTimeline} onSelect={setSelectedTime} />
       </HStack>
       <ViewPager
-        shouldLoadComponent={index => index === selectedIndex}
+        shouldLoadComponent={(index) => index === selectedIndex}
         selectedIndex={selectedIndex}
         onSelect={setSelectedIndex}
-        style={styles.viewPage}>
+        style={styles.viewPage}
+      >
         <Expense />
         <Income />
       </ViewPager>

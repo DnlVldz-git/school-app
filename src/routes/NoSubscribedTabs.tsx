@@ -15,15 +15,15 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LayoutChangeEvent, Pressable, View, StyleSheet } from "react-native";
 
 import Perfil from "screens/private/profile";
-
-import Sessions from "screens/private/sessions/";
-import Calendario from "screens/private/calendario";
+import NoSubscription from "screens/private/profile/NoSubscription";
+import TrialClass from "screens/private/sessions/trial";
+import Finance01 from "screens/Finance/Finance01";
 
 const Tab = createBottomTabNavigator();
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 const difference = 15;
 
-const VerifiedTabs = () => {
+const NoSubscribedTabs = () => {
   return (
     <Tab.Navigator
       initialRouteName="Sesiones"
@@ -33,19 +33,19 @@ const VerifiedTabs = () => {
       tabBar={(props) => <AnimatedTabBar {...props} />}
     >
       <Tab.Screen
-        name="Calendario"
+        name="Trial"
         options={{
           // @ts-ignore
           tabBarIcon: ({ ref }) => (
             <Lottie
               ref={ref}
-              loop={false}
-              source={require("../assets/lottie/icon-calendar.json")}
+              loop={true}
+              source={require("../assets/lottie/trial-class.json")}
               style={styles.icon}
             />
           ),
         }}
-        component={Calendario}
+        component={TrialClass}
       />
 
       <Tab.Screen
@@ -55,13 +55,29 @@ const VerifiedTabs = () => {
           tabBarIcon: ({ ref }) => (
             <Lottie
               ref={ref}
-              loop={false}
-              source={require("../assets/lottie/sessions.icon.json")}
+              loop={true}
+              source={require("../assets/lottie/plan-package.json")}
               style={styles.icon}
             />
           ),
         }}
-        component={Sessions}
+        component={NoSubscription}
+      />
+
+      <Tab.Screen
+        name="Blog"
+        options={{
+          // @ts-ignore
+          tabBarIcon: ({ ref }) => (
+            <Lottie
+              ref={ref}
+              loop={true}
+              source={require("../assets/lottie/post-blog.json")}
+              style={styles.icon}
+            />
+          ),
+        }}
+        component={Finance01}
       />
 
       <Tab.Screen
@@ -265,4 +281,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default VerifiedTabs;
+export default NoSubscribedTabs;

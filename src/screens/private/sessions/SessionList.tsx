@@ -1,35 +1,10 @@
+import dayjs from "dayjs";
+
+import Session from "models/Session";
+
 import * as React from "react";
 import { Image, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-
-import moment from "moment";
-import "moment/locale/es";
-
-import {
-  Layout,
-  StyleService,
-  useStyleSheet,
-  TopNavigation,
-  Avatar,
-  Icon,
-  Button,
-} from "@ui-kitten/components";
-
-import {
-  Container,
-  Content,
-  Text,
-  NavigationAction,
-  HStack,
-  VStack,
-} from "components";
-import Images from "assets/images";
-
-import { useAppSelector } from "hooks/useRedux";
-
-import { useLazyGetAllSessionsByStudentQuery } from "slices/SessionSlice";
-import Session from "models/Session";
-import dayjs from "dayjs";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import {
   ActivityIndicator,
   IconButton,
@@ -37,7 +12,29 @@ import {
   MD3Colors,
 } from "react-native-paper";
 
+import {
+  Layout,
+  StyleService,
+  useStyleSheet,
+  TopNavigation,
+} from "@ui-kitten/components";
+
+import {
+  Container,
+  Content,
+  Text,
+  HStack,
+  VStack,
+  NavigationAction,
+} from "components";
+
+import Images from "assets/images";
+
+import { useAppSelector } from "hooks/useRedux";
+import { useLazyGetAllSessionsByStudentQuery } from "slices/SessionSlice";
+
 const SessionsList = React.memo(() => {
+  const isFocused = useIsFocused();
   const navigation = useNavigation();
   const styles = useStyleSheet(themedStyles);
   const currentUser = useAppSelector((state) => state.auth.user);
@@ -98,12 +95,30 @@ const SessionsList = React.memo(() => {
   };
 
   React.useEffect(() => {
-    getSessions();
-  }, []);
+    if (isFocused) {
+      getSessions();
+    }
+  }, [isFocused]);
 
   return (
     <Container style={styles.container}>
-      <TopNavigation title={"Mis clases"} />
+      <TopNavigation
+        title={"Mis clases"}
+        accessoryLeft={
+          <NavigationAction
+            icon="refresh"
+            status="primary"
+            onPress={() => getSessions()}
+          />
+        }
+        accessoryRight={
+          <NavigationAction
+            icon="plus"
+            status="primary"
+            onPress={() => navigation.navigate("Calendario" as never)}
+          />
+        }
+      />
 
       {isFetching ? (
         <ActivityIndicator animating={true} color={MD2Colors.red800} />
@@ -137,9 +152,9 @@ const SessionsList = React.memo(() => {
 
                       <View>
                         <IconButton
-                          icon="eye-arrow-right-outline"
+                          icon="close-circle"
                           iconColor={MD3Colors.error50}
-                          size={48}
+                          size={28}
                         />
                       </View>
                     </HStack>
@@ -160,10 +175,9 @@ const SessionsList = React.memo(() => {
                           </Layout>
 
                           <VStack
-                            ml={-120}
                             style={{
-                              height: 52,
-                              justifyContent: "center",
+                              width: 260,
+                              justifyContent: "flex-start",
                             }}
                           >
                             <Text category="s2">
@@ -174,21 +188,19 @@ const SessionsList = React.memo(() => {
                             </Text>
                           </VStack>
 
-                          <View>
-                            <IconButton
-                              icon="page-next"
-                              iconColor={MD3Colors.neutral30}
-                              size={20}
-                              onPress={() => {
-                                navigation.navigate(
-                                  "Detalle" as never,
-                                  {
-                                    session: item,
-                                  } as never
-                                );
-                              }}
-                            />
-                          </View>
+                          <IconButton
+                            icon="eye-arrow-right-outline"
+                            iconColor={MD3Colors.neutral30}
+                            size={40}
+                            onPress={() => {
+                              navigation.navigate(
+                                "Detalle" as never,
+                                {
+                                  session: item,
+                                } as never
+                              );
+                            }}
+                          />
                         </HStack>
                       </VStack>
                     );
@@ -199,11 +211,6 @@ const SessionsList = React.memo(() => {
           })}
         </Content>
       )}
-      <Button
-        onPress={() => navigation.navigate("Calendario" as never)}
-        accessoryLeft={<Icon pack="assets" name="plus" />}
-        style={styles.plus}
-      />
     </Container>
   );
 });
@@ -257,26 +264,3 @@ const themedStyles = StyleService.create({
     height: 24,
   },
 });
-
-const DATA_CLASS = [
-  {
-    id: 1,
-    title: "Clase 1",
-    date: "27/03/2023 10:30",
-  },
-  {
-    id: 2,
-    title: "Clase 2",
-    date: "30/03/2023 13:00",
-  },
-  {
-    id: 3,
-    title: "Clase 3",
-    date: "31/03/2023 20:00",
-  },
-  {
-    id: 4,
-    title: "Clase 4",
-    date: "01/04/2023 21:30",
-  },
-];

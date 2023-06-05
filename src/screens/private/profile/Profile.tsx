@@ -11,7 +11,7 @@ import {
   Avatar,
 } from "@ui-kitten/components";
 import Images from "assets/images";
-import { Container, Content, Text, NavigationAction } from "components";
+import { Container, Content, Text } from "components";
 
 import { useLogoutMutation } from "slices/AuthSlice";
 import { useNavigation } from "@react-navigation/native";
@@ -23,14 +23,20 @@ const Profile = React.memo(() => {
 
   const [logoff] = useLogoutMutation();
 
+  const userHasSubscription = () => {
+    if (currentUser && currentUser.subscriptions) {
+      return (
+        currentUser.subscriptions.length > 0 &&
+        currentUser.subscriptions.find((item) => item.status)
+      );
+    }
+
+    return false;
+  };
+
   return (
     <Container style={styles.container}>
-      <TopNavigation
-        title={"Mi perfil"}
-        accessoryRight={
-          <NavigationAction icon="circles_four" status="primary" />
-        }
-      />
+      <TopNavigation title={"Mi perfil"} />
       <Content contentContainerStyle={styles.contentContainerStyle}>
         <Layout level="3" style={styles.card}>
           <Avatar
@@ -74,25 +80,29 @@ const Profile = React.memo(() => {
             </Layout>
           </View>
         </Layout>
+
+        {userHasSubscription() && (
+          <TouchableOpacity
+            style={styles.note}
+            onPress={() => navigation.navigate("Suscription" as never)}
+          >
+            <Image
+              source={Images.subscriptions}
+              /* @ts-ignore */
+              style={styles.image}
+            />
+            <Text category="body">Mi suscripción</Text>
+            <Image
+              source={Images.arrow}
+              /* @ts-ignore */
+              style={styles.arrow}
+            />
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity
           style={styles.note}
-          onPress={() => navigation.navigate("NoSuscription")}
-        >
-          <Image
-            source={Images.subscriptions}
-            /* @ts-ignore */
-            style={styles.image}
-          />
-          <Text category="body"> Suscripción</Text>
-          <Image
-            source={Images.arrow}
-            /* @ts-ignore */
-            style={styles.arrow}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.note}
-          onPress={() => navigation.navigate("Policy")}
+          onPress={() => navigation.navigate("Policy" as never)}
         >
           <Image
             source={Images.policy}
@@ -106,7 +116,10 @@ const Profile = React.memo(() => {
             style={styles.arrow}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.note}>
+        <TouchableOpacity
+          style={styles.note}
+          onPress={() => navigation.navigate("Policy" as never)}
+        >
           <Image
             source={Images.questions}
             /* @ts-ignore */

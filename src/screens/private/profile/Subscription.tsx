@@ -1,8 +1,9 @@
+import dayjs from "dayjs";
+
 import * as React from "react";
 import { Image } from "react-native";
 
-import { useLayout } from "hooks";
-import { useAppDispatch, useAppSelector } from "hooks/useRedux";
+import { useAppSelector } from "hooks/useRedux";
 
 import {
   Layout,
@@ -19,52 +20,93 @@ import {
   VStack,
   HStack,
 } from "components";
-import { useSharedValue } from "react-native-reanimated";
+
+import Subscription from "models/Subscription";
+import { useLazyGetAllByStudentQuery } from "slices/SubscriptionSlice";
 
 const Suscription = React.memo(() => {
-  const { height, width, top, bottom } = useLayout();
   const styles = useStyleSheet(themedStyles);
-  const dispatch = useAppDispatch();
-  const progressValue = useSharedValue(0);
-  const [activeIndex, setActiveIndex] = React.useState(0);
   const currentUser = useAppSelector((state) => state.auth.user);
+  const [fetch, { isFetching }] = useLazyGetAllByStudentQuery();
+
+  const [activeSub, setActiveSub] = React.useState<Subscription>(
+    new Subscription()
+  );
+
+  async function fetchSubs() {
+    const data: Subscription[] = await fetch(
+      currentUser?.studentId ?? ""
+    ).unwrap();
+
+    if (data) {
+      setActiveSub(
+        data.find((item) => item.status === true) || new Subscription()
+      );
+    }
+  }
+
+  React.useEffect(() => {
+    fetchSubs();
+  }, []);
 
   return (
     <Container style={styles.container}>
       <TopNavigation
         title={"Suscripción"}
         accessoryLeft={<NavigationAction status="primary" />}
-        accessoryRight={
-          <NavigationAction status="primary" icon="circles_four" />
-        }
       />
       <Content contentContainerStyle={styles.content}>
         <VStack level="7" mh={16} border={16} padding={24}>
           <Text
-            category="h6"
+            category="h3"
             status="white"
-            marginBottom={14}
-            style={styles.text}
+            marginBottom={30}
+            style={(styles.text, { textAlign: "center" })}
           >
-            Actualmente cuentas con la suscripción básica que consta de 3 clases
-            a la semana
+            {typeof activeSub.plan === "string"
+              ? String(activeSub.plan)
+              : String(activeSub.plan.name)}
           </Text>
-          <Layout style={styles.iconView} level="9"></Layout>
-          <Image
-            marginBottom={50}
-            marginTop={30}
-            source={Images.trophy}
-            /* @ts-ignore */
-            style={styles.image}
-          />
-          <Text category="h8" status="white" marginBottom={14}>
-            Su plan de suscripción terminará en 3 días
-          </Text>
-          <HStack>
-            <Text category="callout" status="primary">
-              Cancelar
+
+          <Layout style={styles.iconView} level="3">
+            <Image
+              source={Images.trophy}
+              /* @ts-ignore */
+              style={styles.image}
+            />
+          </Layout>
+
+          <Text
+            category="h7"
+            status="basic"
+            marginBottom={4}
+            marginTop={20}
+            style={{ fontWeight: "bold", textAlign: "center" }}
+          >
+            <Text
+              category="h7"
+              status="white"
+              style={{ fontWeight: "bold", textAlign: "center" }}
+            >
+              Créditos restantes:
             </Text>
-          </HStack>
+            {` ${activeSub.availableCredits}`}
+          </Text>
+
+          <Text
+            category="h7"
+            status="basic"
+            style={{ fontWeight: "bold", textAlign: "center" }}
+          >
+            <Text
+              category="h7"
+              status="white"
+              style={{ fontWeight: "bold", textAlign: "center" }}
+            >
+              Vencimiento
+            </Text>
+            {` ${dayjs(activeSub.expiration).format("dddd, MMMM D, YYYY")}`}
+          </Text>
         </VStack>
       </Content>
     </Container>
@@ -82,15 +124,8 @@ const themedStyles = StyleService.create({
     paddingTop: 8,
     flexGrow: 1,
   },
-  dot: {
-    transform: [
-      {
-        rotate: "90deg",
-      },
-    ],
-  },
   text: {
-    textAlign: "justify",
+    textAlign: "center",
   },
   caret: {
     tintColor: "text-primary-color",
@@ -131,11 +166,10 @@ const themedStyles = StyleService.create({
     height: 110,
     borderRadius: 60,
     borderWidth: 3,
-    position: "absolute",
+    position: "relative",
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
-    top: 140,
     borderColor: "background-basic-color-1",
   },
 });

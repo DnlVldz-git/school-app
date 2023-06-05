@@ -1,8 +1,4 @@
 import * as React from "react";
-import { View, Image, TouchableOpacity } from "react-native";
-
-import { useLayout } from "hooks";
-import { useAppDispatch, useAppSelector } from "hooks/useRedux";
 
 import {
   StyleService,
@@ -26,9 +22,6 @@ const Policy = React.memo(() => {
       <TopNavigation
         title={"Política de Privacidad"}
         accessoryLeft={<NavigationAction status="primary" />}
-        accessoryRight={
-          <NavigationAction icon="circles_four" status="primary" />
-        }
       />
       <Content contentContainerStyle={styles.content}>
         <VStack level="3" padding={24} border={16}>

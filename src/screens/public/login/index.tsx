@@ -31,11 +31,11 @@ import Images from "assets/images";
 import useLayout from "hooks/useLayout";
 import { useLoginMutation } from "slices/AuthSlice";
 
-const Authenticate = memo(() => {
+const Login = memo(() => {
   const { goBack } = useNavigation();
   const { top } = useLayout();
   const [hide, setHide] = useState(true);
-  const [email, setEmail] = useState("student2@gmail.com");
+  const [email, setEmail] = useState("student4@gmail.com");
   const [password, setPassword] = useState("123");
   const styles = useStyleSheet(themedStyles);
 
@@ -137,7 +137,7 @@ const Authenticate = memo(() => {
   );
 });
 
-export default Authenticate;
+export default Login;
 
 const themedStyles = StyleService.create({
   container: {

@@ -1,8 +1,8 @@
-import { useAppSelector } from "hooks/useRedux";
 import { Dialog, Portal, Button, Text, Card } from "react-native-paper";
 
 import { useCreateSessionMutation } from "slices/SessionSlice";
 import { IScheduleItem } from "interfaces/ICalendar";
+import { useAppSelector } from "hooks/useRedux";
 
 import { errorToast } from "utils";
 import dayjs from "dayjs";
@@ -49,19 +49,18 @@ export default function BookSession({
     if (sessionInfo) {
       const teachers = sessionInfo.teachers;
 
-      const booked = await create({
+      const { session } = await create({
         duration: 60,
         sessionDate: sessionInfo.date,
         studentId: currentUser?.studentId || "",
-        isFirst: currentUser?.sessions.length === 0,
         teacherId: sessionInfo.teachers[teachers.length - 1].teacherId,
         sessionNumber: currentUser?.sessions.length,
         availableCredits: credits,
-      });
+      }).unwrap();
 
-      if (booked) {
-        hideDialog();
+      if (session) {
         refresh();
+        hideDialog();
       }
     }
   }

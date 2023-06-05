@@ -1,6 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { DayAgenda } from "react-native-calendars/src/types";
+import { useIsFocused } from "@react-navigation/native";
 import { Avatar } from "react-native-paper";
 
 import idCalendar from "./idCalendar";
@@ -14,13 +15,18 @@ import {
 } from "react-native-calendars";
 import { TopNavigation } from "@ui-kitten/components";
 
-import { Container, Text, NavigationAction } from "components";
+import { Container, NavigationAction, Text } from "components";
+
+import Session from "models/Session";
 
 import { days } from "utils";
 import { getWeekRangeBasedOnDay } from "utils/date";
 
 import { IScheduleItem } from "interfaces/ICalendar";
-import { useLazyGetAllTeachersSessionsByLevelQuery } from "slices/SessionSlice";
+import {
+  useLazyGetAllSessionsByStudentQuery,
+  useLazyGetAllTeachersSessionsByLevelQuery,
+} from "slices/SessionSlice";
 import { useAppSelector } from "hooks/useRedux";
 
 import BookSession from "./bookSession";
@@ -32,14 +38,19 @@ const Calendario = memo(() => {
   const [items, setItems] = useState<AgendaSchedule>({});
   const [session, setSession] = useState<IScheduleItem>();
 
+  const isFocused = useIsFocused();
   const currentUser = useAppSelector((state) => state.auth.user);
   const [refresh, { isFetching }] = useLazyGetAllTeachersSessionsByLevelQuery();
+  const [fetch] = useLazyGetAllSessionsByStudentQuery();
 
   useEffect(() => {
-    setWeek();
-  }, []);
+    if (isFocused) {
+      setWeek();
+    }
+  }, [isFocused]);
 
   async function fetchSchedule(start: string, end: string) {
+    const studentSessions = await fetch(currentUser?.studentId || "").unwrap();
     const schedule = await refresh(
       `?level=${
         currentUser?.level as string
@@ -69,41 +80,49 @@ const Calendario = memo(() => {
 
         Object.keys(dayHoursRange).forEach((hour) => {
           const teachersAvailable = dayHoursRange[hour];
+          const spotAvailable = dayjs(
+            `${dayFormatted} ${hour}`,
+            "YYYY-MM-DD hh:mm A"
+          );
+
+          const spotOccupied = studentSessions.find((session: Session) => {
+            return (
+              dayjs(session.sessionDate).format("YYYY-MM-DD hh:mm A") ===
+              spotAvailable.format("YYYY-MM-DD hh:mm A")
+            );
+          });
 
           if (
+            !spotOccupied &&
             teachersAvailable.length !== 0 &&
-            dayjs(`${dayFormatted} ${hour}`, "YYYY-MM-DD hh:mm A").isBetween(
-              dayjs(),
+            spotAvailable.isBetween(
+              dayjs().add(1, "hour"),
               dayjs().add(8, "day")
             )
           ) {
-            const startHour = dayjs(
-              `${dayFormatted} ${hour}`,
-              "YYYY-MM-DD hh:mm A"
-            );
-
             itemsForDate.push({
               name: JSON.stringify({
-                date: startHour,
+                date: spotAvailable.toDate(),
                 teachers: teachersAvailable,
-                displayText: `Espacio disponible - ${hour} : ${startHour
+                displayText: `Espacio disponible - ${hour} : ${spotAvailable
                   .add(1, "hour")
                   .format("hh:mm A")}`,
               }),
               height: 50,
               day: dayFormatted,
             });
-          } else {
-            itemsForDate = [emptyItem];
           }
         });
 
         newItems[dayFormatted] = itemsForDate;
-      } else {
+      }
+
+      if (!dayHoursRange || newItems[dayFormatted].length === 0) {
         newItems[dayFormatted] = [emptyItem];
       }
     }
 
+    setItems({});
     setItems(newItems);
   }
 
@@ -149,7 +168,13 @@ const Calendario = memo(() => {
                 ? "Sin cupo"
                 : `${startHour} - ${endHour}`}
             </Text>
-            <Text style={{ fontSize: 22, color: "green", fontWeight: "bold" }}>
+            <Text
+              style={{
+                fontSize: 22,
+                color: sessionSelected.displayText === "N/A" ? "red" : "green",
+                fontWeight: "bold",
+              }}
+            >
               {sessionSelected.displayText === "N/A"
                 ? "No disponible"
                 : "Disponible"}
@@ -160,7 +185,7 @@ const Calendario = memo(() => {
               size={60}
               label={
                 sessionSelected.displayText === "N/A"
-                  ? "00"
+                  ? "N/A"
                   : startHour.substring(0, 2)
               }
             />
@@ -172,7 +197,7 @@ const Calendario = memo(() => {
 
   const renderEmptyDate = () => {
     return (
-      <View style={styles.emptyDate}>
+      <View>
         <Text>This is empty date!</Text>
       </View>
     );
@@ -184,7 +209,16 @@ const Calendario = memo(() => {
 
   return (
     <Container style={styles.container}>
-      <TopNavigation title={"Calendario"} />
+      <TopNavigation
+        title={"Calendario"}
+        accessoryLeft={
+          <NavigationAction
+            icon="refresh"
+            status="primary"
+            onPress={() => setWeek()}
+          />
+        }
+      />
       <Agenda
         items={items}
         refreshing={isFetching}
@@ -209,7 +243,9 @@ const Calendario = memo(() => {
       />
 
       <BookSession
-        refresh={setWeek}
+        refresh={() => {
+          setWeek();
+        }}
         sessionInfo={session}
         hideDialog={hideDialog}
         visible={visible}
